@@ -103,6 +103,12 @@
     <ClInclude Include="Vector4.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\res\textures\calm_back.raw" />
+    <None Include="..\res\textures\calm_bottom.raw" />
+    <None Include="..\res\textures\calm_front.raw" />
+    <None Include="..\res\textures\calm_left.raw" />
+    <None Include="..\res\textures\calm_right.raw" />
+    <None Include="..\res\textures\calm_top.raw" />
     <None Include="..\shaders\sky.frag" />
     <None Include="..\shaders\sky.vert" />
   </ItemGroup>

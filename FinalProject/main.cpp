@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <time.h>
 #include "TimeManager.h"
-#include "BezierCurve.h"
+#include "PiecewiseCurve.h"
 #include "BezierPatch.h"
 #include "Cubemap.h"
 #include "Camera.h"
@@ -38,7 +38,7 @@ float camXAngle = 0.0f;	// relative to x-axis (i.e. vertical angle)
 float camYAngle = 0.0f; // relative to y-axis (i.e. horizontal angle)
 
 // XYZ position of the camera
-float camXPos = 0.0f, camYPos = 0.0f, camZPos = 0.0f;
+float camXPos = 0.0f, camYPos = 10.0f, camZPos = 30.0f;
 
 // movement speed of the camera
 float camXSpeed = 0.0f, camYSpeed = 0.0f, camZSpeed = 0.0f;
@@ -46,9 +46,11 @@ GLfloat speed = 1.0f; // adjust to change movement speed
 
 // Directional movement
 bool moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
+bool moveUp = false, moveDown = false;
 
 /** Bezier surface */
 BezierPatch *bezPatch;
+
 
 /** Material properties */
 GLfloat emptyMat[] = { 0.0, 0.0, 0.0, 1.0 };	// empty vector to occupy properties we don't want a material to have
@@ -63,6 +65,8 @@ GLfloat blue[] = { 0.0, 0.0, 1.0 };			// blue material color
 /** Lights */
 PointLight *pointLight0;
 
+/** Camera track */
+PiecewiseCurve *pc;
 
 
 /* Adjust camera position based off mouse and keyboard input */
@@ -114,9 +118,23 @@ void calcCameraMovement() {
 	camXPos += camXSpeed;
 	camYPos += camYSpeed;
 	camZPos += camZSpeed;
+
+	// set camera matrix
+	camera->set(camXPos, camYPos, camZPos,
+		camXPos + sin(camYAngle * DEG_TO_RADS), camYPos + -tan(camXAngle * DEG_TO_RADS), camZPos + -cos(camYAngle * DEG_TO_RADS),
+		0.0f, 1.0f, 0.0f);
+
+	
+	// If camera moved, display new position
+	if (moveForward || moveBackward || moveLeft || moveRight) {
+		camera->getCenterOfProjection().print("Camera position: ");
+	}
 }
 
-
+/* Adjust camera position along piecewise Bezier curve as a function of time */
+void moveCameraAlongTrack(float t) {
+	
+}
 
 
 /* OpenGL display callback function */
@@ -136,20 +154,15 @@ void displayCallback() {
 	calcCameraMovement();
 	glutWarpPointer(midWinX, midWinY); // moves (hidden) cursor to middle of window
 	
-	// set camera matrix
-	camera->set(camXPos, camYPos, camZPos,
-	camXPos + sin(camYAngle * DEG_TO_RADS), camYPos + -sin(camXAngle * DEG_TO_RADS), camZPos + -cos(camYAngle * DEG_TO_RADS),
-	0.0f, 1.0f, 0.0f);
-
 	// set OpenGL matrix
 	gluLookAt(camera->getCenterOfProjection().x(), camera->getCenterOfProjection().y(), camera->getCenterOfProjection().z(),
 	camera->getLookAtPoint().x(), camera->getLookAtPoint().y(), camera->getLookAtPoint().z(),
 	camera->getUp().x(), camera->getUp().y(), camera->getUp().z());
 
 	// alternate way to update the matrix
-	/*glRotatef(camXAngle, 1.0f, 0.0f, 0.0f); // rotation around x-axis
-	glRotatef(camYAngle, 0.0f, 1.0f, 0.0f); // rotation around y-axis
-	glTranslatef(-camXPos, -camYPos, -camZPos);*/
+	//glRotatef(camXAngle, 1.0f, 0.0f, 0.0f); // rotation around x-axis
+	//glRotatef(camYAngle, 0.0f, 1.0f, 0.0f); // rotation around y-axis
+	//glTranslatef(-camXPos, -camYPos, -camZPos);
 
 	
 	// render skybox
@@ -174,6 +187,9 @@ void displayCallback() {
 
 	// render Bezier patch
 	bezPatch->render();
+
+	//bc->render();
+	pc->render();
 
 	glFlush();
 	glutSwapBuffers();
@@ -239,8 +255,8 @@ void mouseMove(int x, int y) {
 	camYAngle += xMove / sensitivity;
 
 	// limit vertical rotation (stop at straight up and straight down)
-	if (camXAngle < -90.0f) camXAngle = -90.0f;
-	if (camXAngle > 90.0f) camXAngle = 90.0f;
+	if (camXAngle <= -90.0f) camXAngle = -89.9f;
+	if (camXAngle >= 90.0f) camXAngle = 89.9f;
 	// keep horizontal rotation between -180 and 180 degrees (just so values are easier to interpret)
 	if (camYAngle < -180.0f) camYAngle += 360.0f;
 	if (camYAngle > 180.0f) camYAngle -= 360.0f;
@@ -314,31 +330,48 @@ int main(int argc, char *argv[]) {
 	skyShaderCameraPosition = glGetUniformLocation(skyShader->getPid(), "CameraPosition");
 
 
+	// Camera track (temporary)
+	GLfloat curvepoints[3][4][3] = {
+			{
+				{ 0.0, 25.0, 50.0 }, { -50.0, 50.0, 30.0 },
+				{ -50.0, 20.0, -10.0 }, { -20.0, 30.0, -30.0 }
+			},
+			{
+				{ -20.0, 30.0, -30.0 }, { 10.0, 40.0, -50.0 },
+				{ 10.0, 50.0, -40.0 }, { 30.0, 35.0, -10.0 }
+			},
+			{
+				{ 30.0, 35.0, -10.0 }, { 50.0, 20.0, 20.0 },
+				{ 50.0, 0.0, 70.0 }, { 0.0, 25.0, 50.0 }
+			}
+	};
+	pc = new PiecewiseCurve(3, curvepoints);
+
 	// Initialize Bezier patch (ground)
 	GLfloat controlPoints[4][4][3] = {
 			{
-				{ 100, -1, 100 },
-				{ 50, -1, 100 },
-				{ -50, -1, 100 },
-				{ -100, -1, 100 }
+				{ 100, 0, 100 },
+				{ 50, 0, 100 },
+				{ -50, 0, 100 },
+				{ -100, 0, 100 }
 			},
 			{
-				{ 100, -1, 50 },
-				{ 50, -1, 50 },
-				{ -50, -1, 50 },
-				{ -100, -1, 50 }
+				{ 100, 0, 50 },
+				{ 50, 0, 50 },
+				{ -50, 0, 50 },
+				{ -100, 0, 50 }
 			},
 			{
-				{ 100, -1, -50 },
-				{ 50, -1, -50 },
-				{ -50, -1, -50 },
-				{ -100, -1, -50 }
+				{ 100, 0, -50 },
+				{ 50, 0, -50 },
+				{ -50, 0, -50 },
+				{ -100, 0, -50 }
 			},
 			{
-				{ 100, -1, -100 },
-				{ 50, -1, -100 },
-				{ -50, -1, -100 },
-				{ -100, -1, -100 }
+				{ 100, 0, -100 },
+				{ 50, 0, -100 },
+				{ -50, 0, -100 },
+				{ -100, 0, -100 }
 			}
 	};
 	bezPatch = new BezierPatch(controlPoints);

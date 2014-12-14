@@ -2,25 +2,31 @@
 #include "SGGeode.h"
 #include <vector>
 
+static const int bc_detail = 25; // number of points on each curve
+
 class BezierCurve : public SGGeode {
 protected:
-	Vector3* _p0;
-	Vector3* _p1;
-	Vector3* _p2;
-	Vector3* _p3;
+	Matrix4 *bezMatrix;
 
-	Matrix4* bezMatrix;
+	GLfloat cp[4][4]; // control points
 
-	GLfloat cp[4][3];
+	GLfloat *indices[bc_detail]; // vertices on curve
+	GLfloat *tangents[bc_detail]; // tangents on curve
 
-	std::vector<Vector3*> controlPoints;
+	void createMatrix();
 
 public:
+	BezierCurve();
 	BezierCurve(Vector3* p0, Vector3* p1, Vector3* p2, Vector3* p3);
+	BezierCurve(GLfloat[4][3]);
+
+	void set(GLfloat[4][3]);
 	virtual ~BezierCurve();
 
-	std::vector<Vector3*>& points();
-	const std::vector<Vector3*>& points() const;
+	GLfloat* calcPoint(float t);
+	GLfloat* calcTangent(GLfloat* point, float t2);
+
+	GLfloat** getIndices() { return indices; }
 
 	void render();
 };

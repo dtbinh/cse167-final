@@ -75,6 +75,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Matrix4.cpp" />
+    <ClCompile Include="PiecewiseCurve.cpp" />
     <ClCompile Include="SGGeode.cpp" />
     <ClCompile Include="SGGroup.cpp" />
     <ClCompile Include="SGMatrixTransform.cpp" />
@@ -93,6 +94,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Matrix4.h" />
+    <ClInclude Include="PiecewiseCurve.h" />
     <ClInclude Include="SGGeode.h" />
     <ClInclude Include="SGGroup.h" />
     <ClInclude Include="SGMatrixTransform.h" />

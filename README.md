@@ -11,6 +11,7 @@ Controls:
 * s - Move backward
 * a - Strafe left
 * d - Strafe right
+* r - toggle between free-moving camera and on-rails camera
 * ESC - End program
 
 NOTE: At this point, the program controls and hides the cursor. Therefore, it cannot be exited using the mouse. Use ESC instead.

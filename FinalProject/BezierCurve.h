@@ -2,7 +2,7 @@
 #include "SGGeode.h"
 #include <vector>
 
-static const int bc_detail = 25; // number of points on each curve
+static const int bc_detail = 100; // number of points on each curve
 
 class BezierCurve : public SGGeode {
 protected:
@@ -27,6 +27,11 @@ public:
 	GLfloat* calcTangent(GLfloat* point, float t2);
 
 	GLfloat** getIndices() { return indices; }
+
+	GLfloat* getPoint(int i) { return indices[i]; }
+	GLfloat* getTangent(int i) { return tangents[i]; }
+
+	int getNumIndices() { return bc_detail; }
 
 	void render();
 };

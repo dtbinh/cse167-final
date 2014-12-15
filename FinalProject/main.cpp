@@ -1,12 +1,11 @@
-#include "Shader.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include "Shader.h"
 #include <GL\glut.h>
 #include <math.h>
 #include <algorithm>
 #include <time.h>
-#include "TimeManager.h"
 #include "PiecewiseCurve.h"
 #include "BezierPatch.h"
 #include "Cubemap.h"
@@ -14,9 +13,13 @@
 #include "Light.h"
 #include "Material.h"
 
+
 using namespace std;
 
 const float DEG_TO_RADS = 3.141592654f / 180.0f; // convertion of 1 degree to radians
+
+/** Game name */
+char* title = "CSE167 - Final Project";
 
 /** Window measurements */
 int WIN_WIDTH = 1000;
@@ -66,7 +69,14 @@ GLfloat blue[] = { 0.0, 0.0, 1.0 };			// blue material color
 PointLight *pointLight0;
 
 /** Camera track */
-PiecewiseCurve *pc;
+PiecewiseCurve *cameraTrack;
+float bezTime = 0.0f;
+int currentCurve = 0, currentPoint = 0;
+bool cameraIsOnTrack = false;
+
+/** Timer */
+int frames = 0;
+clock_t startTime;
 
 
 /* Adjust camera position based off mouse and keyboard input */
@@ -133,31 +143,94 @@ void calcCameraMovement() {
 
 /* Adjust camera position along piecewise Bezier curve as a function of time */
 void moveCameraAlongTrack(float t) {
+	bezTime += t;
 	
+	if (bezTime >= 1.0f) { // Move camera every (1/t) updates
+		bezTime = 0.0f;
+
+		BezierCurve* bc = cameraTrack->getCurve(currentCurve); // curve camera is currently on
+
+		if (currentPoint >= bc->getNumIndices()) { 
+			// hit end of current curve -> move to next curve
+			currentPoint = 0;
+			currentCurve++;
+			currentCurve %= cameraTrack->getNumCurves();
+			bc = cameraTrack->getCurve(currentCurve);
+		}
+		// update camera position to next point on curve
+		GLfloat* point = bc->getPoint(currentPoint);
+		GLfloat* tangent = bc->getTangent(currentPoint);
+		camXPos = point[0];
+		camYPos = point[1];
+		camZPos = point[2];
+
+		currentPoint++;
+
+		/*if (currentPoint < bc->getNumIndices()) {
+			GLfloat* point = bc->getPoint(currentPoint);
+			GLfloat* tangent = bc->getTangent(currentPoint);
+			camXPos = point[0];
+			camYPos = point[1];
+			camZPos = point[2];
+
+			currentPoint++;
+		} else {
+			currentPoint = 0;
+			currentCurve++;
+			currentCurve %= cameraTrack->getNumCurves();
+
+			bc = cameraTrack->getCurve(currentCurve);
+
+			GLfloat* point = bc->getPoint(currentPoint);
+			GLfloat* tangent = bc->getTangent(currentPoint);
+			camXPos = point[0];
+			camYPos = point[1];
+			camZPos = point[2];
+			
+			currentPoint++;
+		}*/
+	}
+	// update camera matrix
+	camera->set(camXPos, camYPos, camZPos,
+		camXPos + sin(camYAngle * DEG_TO_RADS), camYPos + -tan(camXAngle * DEG_TO_RADS), camZPos + -cos(camYAngle * DEG_TO_RADS),
+		0.0f, 1.0f, 0.0f);
+}
+
+/* Display current FPS in window title */
+void timer() {
+	char titleWithFPS [50];
+	long now = (clock() - startTime);
+	if (now / CLOCKS_PER_SEC >= 1) {
+		sprintf_s(titleWithFPS, 50, "%s | FPS: %d", title, frames);
+		glutSetWindowTitle(titleWithFPS);
+		frames = 0;
+		startTime = clock();
+	}
+	frames++;
 }
 
 
 /* OpenGL display callback function */
 void displayCallback() {
-
-	// show fps in console
-	TimeManager::Instance().CalculateFrameRate(true);
-
+	
 	glEnable(GL_LIGHTING);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
 	glMatrixMode(GL_MODELVIEW);
 
 	glLoadIdentity();
 
-
 	// update camera
-	calcCameraMovement();
+	if (cameraIsOnTrack)
+		moveCameraAlongTrack(0.5);
+	else
+		calcCameraMovement();
+
 	glutWarpPointer(midWinX, midWinY); // moves (hidden) cursor to middle of window
 	
 	// set OpenGL matrix
 	gluLookAt(camera->getCenterOfProjection().x(), camera->getCenterOfProjection().y(), camera->getCenterOfProjection().z(),
-	camera->getLookAtPoint().x(), camera->getLookAtPoint().y(), camera->getLookAtPoint().z(),
-	camera->getUp().x(), camera->getUp().y(), camera->getUp().z());
+			camera->getLookAtPoint().x(), camera->getLookAtPoint().y(), camera->getLookAtPoint().z(),
+			camera->getUp().x(), camera->getUp().y(), camera->getUp().z());
 
 	// alternate way to update the matrix
 	//glRotatef(camXAngle, 1.0f, 0.0f, 0.0f); // rotation around x-axis
@@ -188,8 +261,8 @@ void displayCallback() {
 	// render Bezier patch
 	bezPatch->render();
 
-	//bc->render();
-	pc->render();
+	// render camera track
+	cameraTrack->render();
 
 	glFlush();
 	glutSwapBuffers();
@@ -197,6 +270,8 @@ void displayCallback() {
 
 /* OpenGL idle callback function */
 void idleCallback() {
+	
+	timer();
 	displayCallback();
 }
 
@@ -221,6 +296,9 @@ void processNormalKeys(unsigned char key, int x, int y) {
 	case 's': moveBackward = true; break;
 	case 'a': moveLeft = true; break;
 	case 'd': moveRight = true; break;
+
+	// affix camera to track
+	case 'r': cameraIsOnTrack = !cameraIsOnTrack; break;
 
 	case 27: // ESC
 		exit(0);
@@ -269,7 +347,7 @@ int main(int argc, char *argv[]) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
-	glutCreateWindow("CSE167 - Final Project");
+	glutCreateWindow(title);
 	//glutFullScreen();		// needs to be enabled in final version
 
 	glEnable(GL_DEPTH_TEST);
@@ -345,7 +423,7 @@ int main(int argc, char *argv[]) {
 				{ 50.0, 0.0, 70.0 }, { 0.0, 25.0, 50.0 }
 			}
 	};
-	pc = new PiecewiseCurve(3, curvepoints);
+	cameraTrack = new PiecewiseCurve(3, curvepoints);
 
 	// Initialize Bezier patch (ground)
 	GLfloat controlPoints[4][4][3] = {
@@ -383,6 +461,10 @@ int main(int argc, char *argv[]) {
 	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 4, 0, 1, 12, 4, &controlPoints[0][0][0]);
 	glEnable(GL_MAP2_VERTEX_3);
 	glMapGrid2f(20, 0.0, 1.0, 20, 0.0, 1.0);
+
+
+	// Initialize timer
+	startTime = clock();
 
 	glutMainLoop();
 

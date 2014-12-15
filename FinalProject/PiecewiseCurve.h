@@ -12,5 +12,11 @@ public:
 	~PiecewiseCurve();
 
 	void render();
+
+	int getNumPoints() { return numPoints; }
+	int getNumCurves() { return numCurves; }
+	int getNumIndices();
+
+	BezierCurve* getCurve(int n);
 };
 

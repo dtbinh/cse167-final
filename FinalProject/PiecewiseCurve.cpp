@@ -24,3 +24,17 @@ void PiecewiseCurve::render() {
 		curves[i]->render();
 	}
 }
+
+int PiecewiseCurve::getNumIndices() {
+	int sum = 0;
+	for (int i = 0; i < numCurves; ++i) {
+		sum += curves[i]->getNumIndices();
+	}
+	return sum;
+}
+
+BezierCurve* PiecewiseCurve::getCurve(int n) {
+	if (n >= 0 && n < numCurves)
+		return curves[n];
+	return NULL;
+}

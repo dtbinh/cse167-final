@@ -12,7 +12,7 @@
 #include "Camera.h"
 #include "Light.h"
 #include "Material.h"
-
+#include "RoadGrid.h"
 
 using namespace std;
 
@@ -54,6 +54,8 @@ bool moveUp = false, moveDown = false;
 /** Bezier surface */
 BezierPatch *bezPatch;
 
+/*Road Grid*/
+RoadGrid* makeGrid = new RoadGrid();
 
 /** Material properties */
 GLfloat emptyMat[] = { 0.0, 0.0, 0.0, 1.0 };	// empty vector to occupy properties we don't want a material to have
@@ -257,6 +259,7 @@ void displayCallback() {
 	// render lighting
 	pointLight0->enable();
 	pointLight0->draw();
+	makeGrid->render();
 
 	// render Bezier patch
 	bezPatch->render();
@@ -353,8 +356,8 @@ int main(int argc, char *argv[]) {
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
 	glShadeModel(GL_SMOOTH);
 	glMatrixMode(GL_PROJECTION);
 

@@ -30,7 +30,6 @@ Particle::Particle(GLfloat x, GLfloat y, GLfloat z, int life) : lifetime(life) {
 	a = p_color[3];
 
 	age = -(rand() % life);
-	printf("age: %d\n", age);
 
 	xspeed = randVelocity();
 	yspeed = -0.9f;

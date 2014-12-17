@@ -12,8 +12,9 @@
 #include "Camera.h"
 #include "Light.h"
 #include "Material.h"
+#include "RoadGrid.h"
+#include "Particles.h"
 #include "Particle.h"
-
 
 using namespace std;
 
@@ -54,6 +55,12 @@ bool moveUp = false, moveDown = false;
 
 /** Bezier surface */
 BezierPatch *bezPatch;
+
+/*Road Grid*/
+RoadGrid* makeGrid = new RoadGrid();
+
+/*Particles*/
+Particles* testParticles = new Particles();
 
 
 /** Material properties */
@@ -263,6 +270,10 @@ void displayCallback() {
 	// render lighting
 	pointLight0->enable();
 	pointLight0->draw();
+	makeGrid->render();
+	testParticles->ActivateParticles();
+	testParticles->AdjustParticles();
+	testParticles->RenderParticles();
 
 	// render particles
 	emitter->render();
@@ -366,8 +377,8 @@ int main(int argc, char *argv[]) {
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
 	glShadeModel(GL_SMOOTH);
 	glMatrixMode(GL_PROJECTION);
 

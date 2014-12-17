@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "Light.h"
 #include "Material.h"
+#include "Particle.h"
 
 
 using namespace std;
@@ -73,6 +74,9 @@ PiecewiseCurve *cameraTrack;
 float bezTime = 0.0f;
 int currentCurve = 0, currentPoint = 0;
 bool cameraIsOnTrack = false;
+
+/** Particle Emitter */
+ParticleEmitter *emitter;
 
 /** Timer */
 int frames = 0;
@@ -225,6 +229,8 @@ void displayCallback() {
 	else
 		calcCameraMovement();
 
+	emitter->update();
+
 	glutWarpPointer(midWinX, midWinY); // moves (hidden) cursor to middle of window
 	
 	// set OpenGL matrix
@@ -258,6 +264,9 @@ void displayCallback() {
 	pointLight0->enable();
 	pointLight0->draw();
 
+	// render particles
+	emitter->render();
+
 	// render Bezier patch
 	bezPatch->render();
 
@@ -272,6 +281,7 @@ void displayCallback() {
 void idleCallback() {
 	
 	timer();
+	
 	displayCallback();
 }
 
@@ -284,7 +294,7 @@ void reshapeCallback(int w, int h) {
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(60.0, (double)WIN_WIDTH / (double)WIN_HEIGHT, 1.0, 1000.0);
+	gluPerspective(60.0, (double)WIN_WIDTH / (double)WIN_HEIGHT, 0.1, 1000.0);
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -343,6 +353,9 @@ void mouseMove(int x, int y) {
 
 
 int main(int argc, char *argv[]) {
+
+	// seed random number generator
+	srand(time(0));
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -407,6 +420,8 @@ int main(int argc, char *argv[]) {
 	skyShader->printLog();
 	skyShaderCameraPosition = glGetUniformLocation(skyShader->getPid(), "CameraPosition");
 
+	// Particle Emitter
+	emitter = new ParticleEmitter(0.0f, 200.0f, -0.0f, 5000, 1000);
 
 	// Camera track (temporary)
 	GLfloat curvepoints[3][4][3] = {
@@ -461,7 +476,6 @@ int main(int argc, char *argv[]) {
 	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 4, 0, 1, 12, 4, &controlPoints[0][0][0]);
 	glEnable(GL_MAP2_VERTEX_3);
 	glMapGrid2f(20, 0.0, 1.0, 20, 0.0, 1.0);
-
 
 	// Initialize timer
 	startTime = clock();

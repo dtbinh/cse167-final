@@ -1,6 +1,4 @@
 #include "RoadGrid.h"
-//#define _CRTDBG_MAP_ALLOC
-//#define _CRT_SECURE_NO_DEPRECATE
 
 RoadGrid::RoadGrid(){
 	//loadTexture();
@@ -75,6 +73,7 @@ void RoadGrid::createCity(float roadSize){
 			tester->renderSkyscrapper(randomWidth, randomHeights[2 + i], (roadSize + randomWidth) + 7 * i, -17.0);
 		}
 	}
+
 
 }
 

@@ -15,8 +15,10 @@ protected:
 
 public:
 	CreateSkyscrapper();
+	
 	~CreateSkyscrapper();
 	void renderSkyscrapper(float, float, float, float);
+	void renderCylinder(float, float, float, float);
 	unsigned char* loadPPM(const char*, int&, int&);
 	void loadTexture();
 };

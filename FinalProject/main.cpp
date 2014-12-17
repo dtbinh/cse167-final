@@ -13,6 +13,7 @@
 #include "Light.h"
 #include "Material.h"
 #include "RoadGrid.h"
+#include "Particles.h"
 
 using namespace std;
 
@@ -56,6 +57,10 @@ BezierPatch *bezPatch;
 
 /*Road Grid*/
 RoadGrid* makeGrid = new RoadGrid();
+
+/*Particles*/
+Particles* testParticles = new Particles();
+
 
 /** Material properties */
 GLfloat emptyMat[] = { 0.0, 0.0, 0.0, 1.0 };	// empty vector to occupy properties we don't want a material to have
@@ -260,6 +265,9 @@ void displayCallback() {
 	pointLight0->enable();
 	pointLight0->draw();
 	makeGrid->render();
+	testParticles->ActivateParticles();
+	testParticles->AdjustParticles();
+	testParticles->RenderParticles();
 
 	// render Bezier patch
 	bezPatch->render();

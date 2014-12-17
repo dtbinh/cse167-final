@@ -72,6 +72,9 @@
     <ClCompile Include="RoadGrid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Particles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLee.h">
@@ -122,13 +125,13 @@
     <ClInclude Include="PiecewiseCurve.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\FinalProject3\cse167-final\FinalProject\CreateSkyscrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CreateSkyscrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RoadGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Particles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,6 +9,7 @@
 #include <stdio.h>      /* printf, NULL */
 #include <stdlib.h>     /* srand, rand */
 #include <ctime>
+
 class RoadGrid{
 
 protected:

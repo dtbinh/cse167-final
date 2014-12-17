@@ -54,3 +54,12 @@ void CreateSkyscrapper::renderSkyscrapper(float width, float height, float xCoor
 	glEnd();
 
 }
+
+void CreateSkyscrapper::renderCylinder(float width, float height, float xCoord, float zCoord){
+	GLUquadricObj *obj = gluNewQuadric();
+
+	glRotated(90.0f, 1.0f, 0.0f, 0.0f);
+	gluCylinder(obj, 1.0, 1.0, 10, 30, 30);
+
+
+}

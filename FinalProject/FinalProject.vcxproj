@@ -76,6 +76,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Matrix4.cpp" />
+    <ClCompile Include="Particles.cpp" />
     <ClCompile Include="PiecewiseCurve.cpp" />
     <ClCompile Include="RoadGrid.cpp" />
     <ClCompile Include="SGGeode.cpp" />
@@ -87,7 +88,6 @@
     <ClCompile Include="Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\FinalProject3\cse167-final\FinalProject\CreateSkyscrapper.h" />
     <ClInclude Include="BezierCurve.h" />
     <ClInclude Include="BezierPatch.h" />
     <ClInclude Include="Camera.h" />
@@ -97,6 +97,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Matrix4.h" />
+    <ClInclude Include="Particles.h" />
     <ClInclude Include="PiecewiseCurve.h" />
     <ClInclude Include="RoadGrid.h" />
     <ClInclude Include="SGGeode.h" />

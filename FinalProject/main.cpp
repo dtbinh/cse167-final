@@ -57,7 +57,8 @@ bool moveUp = false, moveDown = false;
 BezierPatch *bezPatch;
 
 /*Road Grid*/
-RoadGrid* makeGrid = new RoadGrid();
+RoadGrid* makeGrid;
+Shader *textureShader;
 
 /*Particles*/
 Particles* testParticles = new Particles();
@@ -270,7 +271,14 @@ void displayCallback() {
 	// render lighting
 	pointLight0->enable();
 	pointLight0->draw();
-	makeGrid->render();
+
+	textureShader->bind();
+	//GLuint location = glGetUniformLocation(textureShader->getPid(), "tex");
+	//glActiveTexture(GL_TEXTURE0);
+	glUniform1iARB(glGetUniformLocation(textureShader->getPid(), "tex"), 1);
+	makeGrid->render(textureShader->getPid());
+	textureShader->unbind();
+
 	testParticles->ActivateParticles();
 	testParticles->AdjustParticles();
 	testParticles->RenderParticles();
@@ -426,10 +434,15 @@ int main(int argc, char *argv[]) {
 		"../res/textures/calm_back.raw",
 		512, 512);
 
+	makeGrid = new RoadGrid();
+
 	// Initialize shaders
 	skyShader = new Shader("../shaders/sky.vert", "../shaders/sky.frag", true);
 	skyShader->printLog();
 	skyShaderCameraPosition = glGetUniformLocation(skyShader->getPid(), "CameraPosition");
+
+	textureShader = new Shader("../shaders/texture2D.vert", "../shaders/texture2D.frag", true);
+	textureShader->printLog();
 
 	// Particle Emitter
 	emitter = new ParticleEmitter(0.0f, 200.0f, -0.0f, 5000, 1000);

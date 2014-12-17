@@ -8,7 +8,7 @@ void CreateSkyscrapper::renderSkyscrapper(float width, float height, float xCoor
 
 	glBegin(GL_QUADS);
 	
-		glColor3f(0.0, 0.0, 1.0);
+		//glColor3f(0.0, 0.0, 1.0);
 
 		glNormal3f(0.0, 0.0, 1.0);
 		glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);

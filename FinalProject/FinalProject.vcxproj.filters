@@ -66,16 +66,16 @@
     <ClCompile Include="PiecewiseCurve.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CreateSkyscrapper.cpp">
+    <ClCompile Include="Particle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RoadGrid.cpp">
+    <ClCompile Include="CreateSkyscrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Particles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Particle.cpp">
+    <ClCompile Include="RoadGrid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -128,16 +128,16 @@
     <ClInclude Include="PiecewiseCurve.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CreateSkyscrapper.h">
+    <ClInclude Include="Particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RoadGrid.h">
+    <ClInclude Include="CreateSkyscrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Particles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Particle.h">
+    <ClInclude Include="RoadGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -164,6 +164,30 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\res\textures\calm_top.raw">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\textures\road.raw">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\textures\roadEmpty.raw">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\textures\roadT.raw">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\textures\roadTurn.raw">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\textures\roadTurnLarge.raw">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\textures\roadX.raw">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\shaders\texture2D.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\shaders\texture2D.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

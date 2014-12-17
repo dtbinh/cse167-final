@@ -10,6 +10,8 @@
 #include <stdlib.h>     /* srand, rand */
 #include <ctime>
 
+using namespace std;
+
 class RoadGrid{
 
 protected:
@@ -17,6 +19,9 @@ protected:
 	GLuint texture[5];     // storage for five texture
 	bool load = true;
 	float randomHeights[900];
+
+	// road textures
+	//GLuint road, roadEmpty, roadT, roadTurn, roadX;
 
 public:
 	float randomWidth;
@@ -31,10 +36,12 @@ public:
 	
 	float createRandomHeight(int);
 	float createRandomWidth(int);
-	void createGrid(float, float);
-	void render();
+	void createGrid(float, float, int pid);
+	void render(int);
 	void loadTexture();
 	void createCity(float);
+
+	void loadRawTexture(GLuint tex, const char *filename, int width, int height);
 };
 
 #endif

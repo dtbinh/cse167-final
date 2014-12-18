@@ -220,5 +220,8 @@
     <None Include="..\res\textures\roadX.ppm">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\res\textures\windows.ppm">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

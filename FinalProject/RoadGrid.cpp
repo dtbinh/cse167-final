@@ -30,9 +30,9 @@ RoadGrid::RoadGrid(){
 			/*tester->renderSkyscrapper(randomWidth, randomHeights[0 + i], (roadSize + randomWidth) + 7 * i, -3.0);
 			tester->renderSkyscrapper(randomWidth, randomHeights[1 + i], (roadSize + randomWidth) + 7 * i, -10.0);
 			tester->renderSkyscrapper(randomWidth, randomHeights[2 + i], (roadSize + randomWidth) + 7 * i, -17.0);*/
-			buildings.push_back(new Building((roadSize + randomWidth) + 7 * i, randomHeights[0 + i] / 2, -3.0, randomWidth, randomHeights[0 + i], randomWidth));
-			buildings.push_back(new Building((roadSize + randomWidth) + 7 * i, randomHeights[1 + i] / 2, -10.0, randomWidth, randomHeights[1 + i], randomWidth));
-			buildings.push_back(new Building((roadSize + randomWidth) + 7 * i, randomHeights[2 + i] / 2, -17.0, randomWidth, randomHeights[2 + i], randomWidth));
+			buildings.push_back(new Building((roadSize + randomWidth) + 13 * i, randomHeights[0 + i] / 2, -13.0, randomWidth, randomHeights[0 + i], 4));
+			//buildings.push_back(new Building((roadSize + randomWidth) + 10 * i, randomHeights[1 + i] / 2, -10.0, randomWidth, randomHeights[1 + i], randomWidth));
+			//buildings.push_back(new Building((roadSize + randomWidth) + 10 * i, randomHeights[2 + i] / 2, -17.0, randomWidth, randomHeights[2 + i], randomWidth));
 
 		}
 	}
@@ -117,15 +117,15 @@ void RoadGrid::createGrid(float roadSize, float spacing, int shaderPid){
 	*************************************************/
 
 	//Creates the roads that runs lenght wise
-	
 	glEnable(GL_TEXTURE_2D);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, regRoad);
 	glDisable(GL_BLEND);
-	for (int i = int(-spacing / 2)*roadSize; i < int(spacing / 2)*roadSize + spacing; i += spacing){
+	
+	for (int i = -25; i < 30; i += spacing){
 		for (int j = int((-99) / roadSize); j < int(100 / roadSize); j += 2){
 			glBegin(GL_QUADS);
 			glNormal3f(0.0, 1.0, 0.0);
-			if (i != j){
+			if ((j % 10)){
 				glTexCoord2f(0, 1); glVertex3f(roadSize*(-1.0 + j), 0.1, roadSize*(-1.0 + i));
 				glTexCoord2f(1, 1); glVertex3f(roadSize*(1.0 + j), 0.1, roadSize*(-1.0 + i));
 				glTexCoord2f(1, 0); glVertex3f(roadSize*(1.0 + j), 0.1, roadSize*(1.0 + i));
@@ -136,46 +136,40 @@ void RoadGrid::createGrid(float roadSize, float spacing, int shaderPid){
 	}
 	glDisable(GL_TEXTURE_2D);
 
-
-	//Creates the roads that runs latterally
-	glEnable(GL_TEXTURE_2D);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, regRoad);
-	glDisable(GL_BLEND);
-	for (int i = int(-spacing / 2)*roadSize; i < int(spacing / 2)*roadSize + spacing; i += spacing){
-		for (int j = int((-99) / roadSize); j < int(100 / roadSize); j += 2){
-			glBegin(GL_QUADS);
-			glNormal3f(0.0, 1.0, 0.0);
-			if (i != j){
-				glTexCoord2f(1, 0); glVertex3f(roadSize*(-1.0 + i), 0.1, roadSize*(-1.0 + j));
-				glTexCoord2f(1, 1); glVertex3f(roadSize*(1.0 + i), 0.1, roadSize*(-1.0 + j));
-				glTexCoord2f(0, 1); glVertex3f(roadSize*(1.0 + i), 0.1, roadSize*(1.0 + j));
-				glTexCoord2f(0, 0); glVertex3f(roadSize*(-1.0 + i), 0.1, roadSize*(1.0 + j));
-			}
-			glEnd();
-		}
-	}
-	glDisable(GL_TEXTURE_2D);
-
-
-	//Render the intersections
+	//////Render the intersections
 	glEnable(GL_TEXTURE_2D);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, roadX);
 	glDisable(GL_BLEND);
-	for (int i = int(-spacing / 2)*roadSize; i < int(spacing / 2)*roadSize + spacing; i += spacing){
+	for (int i = -25; i < 30; i += spacing){
 		for (int j = int((-99) / roadSize); j < int(100 / roadSize); j += 2){
 			glBegin(GL_QUADS);
 			glNormal3f(0.0, 1.0, 0.0);
-			if (i != j){
-				glTexCoord2f(1, 0); glVertex3f(roadSize*(-1.0 + i), 0.1, roadSize*(-1.0 + j));
-				glTexCoord2f(1, 1); glVertex3f(roadSize*(1.0 + i), 0.1, roadSize*(-1.0 + j));
-				glTexCoord2f(0, 1); glVertex3f(roadSize*(1.0 + i), 0.1, roadSize*(1.0 + j));
-				glTexCoord2f(0, 0); glVertex3f(roadSize*(-1.0 + i), 0.1, roadSize*(1.0 + j));
+			if (!(j % 10)){
+				glTexCoord2f(0, 1); glVertex3f(roadSize*(-1.0 + j), 0.1, roadSize*(-1.0 + i));
+				glTexCoord2f(1, 1); glVertex3f(roadSize*(1.0 + j), 0.1, roadSize*(-1.0 + i));
+				glTexCoord2f(1, 0); glVertex3f(roadSize*(1.0 + j), 0.1, roadSize*(1.0 + i));
+				glTexCoord2f(0, 0); glVertex3f(roadSize*(-1.0 + j), 0.1, roadSize*(1.0 + i));
 			}
 			glEnd();
 		}
 	}
 	glDisable(GL_TEXTURE_2D);
 
+	////Creates the roads that runs latterally
+	glEnable(GL_TEXTURE_2D);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, regRoad);
+	glDisable(GL_BLEND);
+	for (int k = -80; k < 100; k += 40){
+		for (int i = -23; i < 24; i += 2){
+			glBegin(GL_QUADS);
+			glTexCoord2f(1, 0); glVertex3f(roadSize*(-1.0) + k, 0.1, roadSize*(-1.0 + i));
+			glTexCoord2f(1, 1); glVertex3f(roadSize*(1.0) + k, 0.1, roadSize*(-1.0 + i));
+			glTexCoord2f(0, 1); glVertex3f(roadSize*(1.0) + k, 0.1, roadSize*(1.0 + i));
+			glTexCoord2f(0, 0); glVertex3f(roadSize*(-1.0) + k, 0.1, roadSize*(1.0 + i));
+			glEnd();
+		}
+	}
+	glDisable(GL_TEXTURE_2D);
 	createCity(roadSize);
 }
 
@@ -220,8 +214,6 @@ unsigned char* loadPPM(const char* filename, int width, int height){
 	retval_fgets = fgets(buf[0], BUFSIZE, fp);
 
 	/*Removed because it breaks everything*/
-
-
 	// Read width and height:
 	//do{
 	//	retval_fgets = fgets(buf[0], BUFSIZE, fp);

@@ -57,7 +57,9 @@ bool moveUp = false, moveDown = false;
 BezierPatch *bezPatch;
 
 /*Road Grid*/
-RoadGrid* makeGrid;
+RoadGrid* makeGrid;// = new RoadGrid();
+bool renderCity = true; 
+
 Shader *textureShader;
 
 /*Particles*/
@@ -91,8 +93,25 @@ int frames = 0;
 clock_t startTime;
 
 
+void makeNewCity(){
+	renderCity = false;
+	delete makeGrid;
+	RoadGrid* makeGrid = new RoadGrid();
+	renderCity = true;
+}
+
 /* Adjust camera position based off mouse and keyboard input */
 void calcCameraMovement() {
+	// check collisions
+	for (vector<Building*>::iterator it = makeGrid->getBuildings().begin(); it != makeGrid->getBuildings().end(); ++it) {
+		if (camera->getBoundingBox()->collidesWith((*it)->getBoundingBox())) {
+			Vector3 v(0.0, 0.0, -10.0);
+			camera->setCenterOfProjection(camera->getCenterOfProjection() - v);
+			printf("Collision\n");
+			return;
+		}
+	}
+
 	float xMovement = 0.0f, yMovement = 0.0f, zMovement = 0.0f;
 
 	if (moveForward) {
@@ -237,6 +256,11 @@ void displayCallback() {
 	else
 		calcCameraMovement();
 
+	//glPushMatrix();
+	//glLoadIdentity();
+	camera->getBoundingBox()->draw();
+	//glPopMatrix();
+
 	emitter->update();
 
 	glutWarpPointer(midWinX, midWinY); // moves (hidden) cursor to middle of window
@@ -258,6 +282,7 @@ void displayCallback() {
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_BLEND);
+	glPopAttrib();
 
 	skyShader->bind();
 	glUniform3fvARB(skyShaderCameraPosition, 1, camera->getCenterOfProjection().asArray());
@@ -272,16 +297,22 @@ void displayCallback() {
 	pointLight0->enable();
 	pointLight0->draw();
 
-	textureShader->bind();
-	//GLuint location = glGetUniformLocation(textureShader->getPid(), "tex");
-	//glActiveTexture(GL_TEXTURE0);
-	glUniform1iARB(glGetUniformLocation(textureShader->getPid(), "tex"), 1);
-	makeGrid->render(textureShader->getPid());
-	textureShader->unbind();
+	if (renderCity) {
+		textureShader->bind();
+		//GLuint location = glGetUniformLocation(textureShader->getPid(), "tex");
+		//glActiveTexture(GL_TEXTURE0);
+		glUniform1iARB(glGetUniformLocation(textureShader->getPid(), "tex"), 0);
+		makeGrid->render(textureShader->getPid());
+		textureShader->unbind();
+	}
+	/*if (renderCity){
+		makeGrid->render();
+	}*/
 
-	testParticles->ActivateParticles();
-	testParticles->AdjustParticles();
-	testParticles->RenderParticles();
+
+	//testParticles->ActivateParticles();
+	//testParticles->AdjustParticles();
+	//testParticles->RenderParticles();
 
 	// render particles
 	emitter->render();
@@ -325,6 +356,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
 	case 's': moveBackward = true; break;
 	case 'a': moveLeft = true; break;
 	case 'd': moveRight = true; break;
+	case 't': makeNewCity(); break;
 
 	// affix camera to track
 	case 'r': cameraIsOnTrack = !cameraIsOnTrack; break;

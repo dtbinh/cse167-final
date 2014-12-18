@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BoundingBox.h"
 #include "Vector3.h"
 #include "Matrix4.h"
 #include "GL\glut.h"
@@ -12,6 +13,8 @@ protected:
 	Vector3 up; // up vector
 	Matrix4 c;	// interal camera matrix
 	Matrix4 c_inv;
+
+	BoundingBox *bb;
 public:
 	Camera();
 	Camera(Vector3&, Vector3&, Vector3&);
@@ -51,5 +54,7 @@ public:
 		set(Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 1, 0));
 		//c.identity();
 	}
+
+	BoundingBox*  getBoundingBox() { return bb; }
 };
 

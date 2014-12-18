@@ -125,7 +125,7 @@ void ParticleEmitter::update() {
 void ParticleEmitter::render() {
 	glPushMatrix();
 	glPointSize(3.0f);
-	glColor3f(p_color[0], p_color[1], p_color[2]);
+	//glColor3f(p_color[0], p_color[1], p_color[2]);
 	glBegin(GL_POINTS);
 	for (auto it = particles.begin(); it != particles.end(); ++it) {
 		if ((*it)->age >= 0)

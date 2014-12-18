@@ -4,13 +4,16 @@
 Camera::Camera() {
 	// set(Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	c.identity();
+	bb = new BoundingBox(0.0f, 0.0f, -10.0f, 2.0, 2.0, 2.0);
 }
 
 Camera::Camera(Vector3& e, Vector3& d, Vector3& up) {
+	bb = new BoundingBox(e.x(), e.y(),e.z() - 10.0, 2.0, 2.0, 2.0);
 	set(e, d, up);
 }
 
 Camera::~Camera() {
+	delete bb;
 }
 
 void Camera::set(Vector3& e, Vector3& d, Vector3& up) {
@@ -36,6 +39,8 @@ void Camera::set(Vector3& e, Vector3& d, Vector3& up) {
 
 	// create inverse camera matrix
 	c_inv = c.inverse();
+
+	bb->setCenter(e.x(), e.y(), e.z());
 }
 
 void Camera::set(float e0, float e1, float e2, float d0, float d1, float d2, float up0, float up1, float up2) {

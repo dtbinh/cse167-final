@@ -4,7 +4,7 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #include "Matrix4.h"
 #include "GL/glut.h"
-#include <time.h>       
+#include <time.h>
 
 class CreateSkyscrapper{
 

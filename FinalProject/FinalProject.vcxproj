@@ -68,6 +68,8 @@
   <ItemGroup>
     <ClCompile Include="BezierCurve.cpp" />
     <ClCompile Include="BezierPatch.cpp" />
+    <ClCompile Include="BoundingBox.cpp" />
+    <ClCompile Include="Building.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CreateSkyscrapper.cpp" />
     <ClCompile Include="Cubemap.cpp" />
@@ -91,6 +93,8 @@
   <ItemGroup>
     <ClInclude Include="BezierCurve.h" />
     <ClInclude Include="BezierPatch.h" />
+    <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="Building.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CreateSkyscrapper.h" />
     <ClInclude Include="Cubemap.h" />
@@ -117,11 +121,17 @@
     <None Include="..\res\textures\calm_left.raw" />
     <None Include="..\res\textures\calm_right.raw" />
     <None Include="..\res\textures\calm_top.raw" />
+    <None Include="..\res\textures\road.ppm" />
     <None Include="..\res\textures\road.raw" />
+    <None Include="..\res\textures\roadEmpty.ppm" />
     <None Include="..\res\textures\roadEmpty.raw" />
+    <None Include="..\res\textures\roadT.ppm" />
     <None Include="..\res\textures\roadT.raw" />
+    <None Include="..\res\textures\roadTurn.ppm" />
     <None Include="..\res\textures\roadTurn.raw" />
+    <None Include="..\res\textures\roadTurnLarge.ppm" />
     <None Include="..\res\textures\roadTurnLarge.raw" />
+    <None Include="..\res\textures\roadX.ppm" />
     <None Include="..\res\textures\roadX.raw" />
     <None Include="..\shaders\sky.frag" />
     <None Include="..\shaders\sky.vert" />

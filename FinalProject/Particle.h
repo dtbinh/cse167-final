@@ -21,6 +21,9 @@ public:
 
 	GLfloat randVelocity();
 	void update();
+
+	void checkCollisions();
+	bool collidesWith(BoundingBox&);
 };
 
 class ParticleEmitter : SGGeode {

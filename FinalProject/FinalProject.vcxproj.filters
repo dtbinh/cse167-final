@@ -78,6 +78,12 @@
     <ClCompile Include="RoadGrid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Building.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLee.h">
@@ -140,6 +146,12 @@
     <ClInclude Include="RoadGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\shaders\sky.frag">
@@ -188,6 +200,24 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\shaders\texture2D.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\textures\road.ppm">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\textures\roadEmpty.ppm">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\textures\roadT.ppm">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\textures\roadTurn.ppm">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\textures\roadTurnLarge.ppm">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\textures\roadX.ppm">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

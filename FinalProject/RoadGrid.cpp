@@ -4,9 +4,10 @@
 
 #include "Shader.h"
 #include "RoadGrid.h"
+#include <iostream>
 
 RoadGrid::RoadGrid(){
-	//loadTexture();
+	loadTexture();
 	srand(time(NULL));
 
 	randomWidth = 2;
@@ -16,22 +17,41 @@ RoadGrid::RoadGrid(){
 	}
 	
 	// load road textures
-	loadRawTexture(texture[0], "../res/textures/road.raw", 512, 512);
+	/*loadRawTexture(texture[0], "../res/textures/road.raw", 512, 512);
 	loadRawTexture(texture[1], "../res/textures/roadEmpty.raw", 512, 512);
 	loadRawTexture(texture[2], "../res/textures/roadT.raw", 512, 512);
 	loadRawTexture(texture[3], "../res/textures/roadTurn.raw", 512, 512);
-	loadRawTexture(texture[4], "../res/textures/roadX.raw", 512, 512);
+	loadRawTexture(texture[4], "../res/textures/roadX.raw", 512, 512);*/
+
+	int roadSize = 1;
+	// create buildings
+	for (int j = 0; j < 3; j++){
+		for (int i = 0; i < 3; i++){
+			/*tester->renderSkyscrapper(randomWidth, randomHeights[0 + i], (roadSize + randomWidth) + 7 * i, -3.0);
+			tester->renderSkyscrapper(randomWidth, randomHeights[1 + i], (roadSize + randomWidth) + 7 * i, -10.0);
+			tester->renderSkyscrapper(randomWidth, randomHeights[2 + i], (roadSize + randomWidth) + 7 * i, -17.0);*/
+			buildings.push_back(new Building((roadSize + randomWidth) + 7 * i, randomHeights[0 + i] / 2, -3.0, randomWidth, randomHeights[0 + i], randomWidth));
+			buildings.push_back(new Building((roadSize + randomWidth) + 7 * i, randomHeights[1 + i] / 2, -10.0, randomWidth, randomHeights[1 + i], randomWidth));
+			buildings.push_back(new Building((roadSize + randomWidth) + 7 * i, randomHeights[2 + i] / 2, -17.0, randomWidth, randomHeights[2 + i], randomWidth));
+
+		}
+	}
 }
 
 void RoadGrid::render(int pid){
 
-	float roadSize = 1;
-	float spacing = 20;
+	float roadSize = 4;
+	float spacing = 10;
 	createGrid(roadSize, spacing, pid);
 
 }
 
-RoadGrid::~RoadGrid(){}
+RoadGrid::~RoadGrid(){
+	for (auto it = buildings.begin(); it != buildings.end(); ++it) {
+		delete *it;
+	}
+	buildings.clear();
+}
 
 float RoadGrid::createRandomWidth(int maxWidth){
 	float buildingWidth = rand() % maxWidth;
@@ -46,6 +66,7 @@ float RoadGrid::createRandomHeight(int maxHeight){
 
 
 void RoadGrid::createGrid(float roadSize, float spacing, int shaderPid){
+	/*************************************************
 	glPushMatrix();
 	glEnable(GL_TEXTURE_2D);
 
@@ -54,23 +75,10 @@ void RoadGrid::createGrid(float roadSize, float spacing, int shaderPid){
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	//glActiveTexture(GL_TEXTURE1);
 	//glBindTexture(GL_TEXTURE_2D, texture[0]);
-	//glUniform1i(location, 0);
-	//glUseProgram(shaderPid);
-
-	
-	//glBegin(GL_QUADS);
-	////glColor3f(1, 1, 1);
-	////glNormal3f(0, 0, 1);
-	//glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0f, 0.0f, -10.0f);
-	//glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0f, 0.0f, -10.0f);
-	//glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0f, 20.0f, -10.0f);
-	//glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0f, 20.0f, -10.0f);
-	//glEnd();
-	////glUseProgram(0);
-	//glDisable(GL_TEXTURE_2D);
+	//glUniform1i(location, 0
 
 	// check for errors
-	//if (glGetError() != GL_NO_ERROR) cerr << gluErrorString(glGetError()) << endl;
+	
 	//glBindTexture(GL_TEXTURE_2D, texture[0]);
 
 	for (int j = -100; j < 120; j += spacing){
@@ -81,7 +89,7 @@ void RoadGrid::createGrid(float roadSize, float spacing, int shaderPid){
 			
 			//glUniform1i(glGetUniformLocationARB(shaderPid, "tex"), 0);
 			glBindTexture(GL_TEXTURE_2D, texture[0]);
-			glActiveTexture(texture[0]);
+			//glActiveTexture(texture[0]);
 			//glUniform1f(road, 20);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0, 1); glVertex3f((-1.0 + i),0.1, -roadSize + j);
@@ -91,7 +99,7 @@ void RoadGrid::createGrid(float roadSize, float spacing, int shaderPid){
 			glEnd();
 
 			//Draw the roads laterally
-			glBindTexture(GL_TEXTURE_2D, texture[1]);
+			glBindTexture(GL_TEXTURE_2D, texture[4]);
 			glBegin(GL_QUADS);
 				//glColor3f(1.0, 1.0, 1.0);
 				//glNormal3f(0.0, -1.0, 0.0);
@@ -102,27 +110,96 @@ void RoadGrid::createGrid(float roadSize, float spacing, int shaderPid){
 			glEnd();
 		}
 	}
+	glDisable(GL_TEXTURE_2D);
 	createCity(roadSize);
-
+	
 	glPopMatrix();
+	*************************************************/
+
+	//Creates the roads that runs lenght wise
+	
+	glEnable(GL_TEXTURE_2D);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, regRoad);
+	glDisable(GL_BLEND);
+	for (int i = int(-spacing / 2)*roadSize; i < int(spacing / 2)*roadSize + spacing; i += spacing){
+		for (int j = int((-99) / roadSize); j < int(100 / roadSize); j += 2){
+			glBegin(GL_QUADS);
+			glNormal3f(0.0, 1.0, 0.0);
+			if (i != j){
+				glTexCoord2f(0, 1); glVertex3f(roadSize*(-1.0 + j), 0.1, roadSize*(-1.0 + i));
+				glTexCoord2f(1, 1); glVertex3f(roadSize*(1.0 + j), 0.1, roadSize*(-1.0 + i));
+				glTexCoord2f(1, 0); glVertex3f(roadSize*(1.0 + j), 0.1, roadSize*(1.0 + i));
+				glTexCoord2f(0, 0); glVertex3f(roadSize*(-1.0 + j), 0.1, roadSize*(1.0 + i));
+			}
+			glEnd();
+		}
+	}
+	glDisable(GL_TEXTURE_2D);
+
+
+	//Creates the roads that runs latterally
+	glEnable(GL_TEXTURE_2D);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, regRoad);
+	glDisable(GL_BLEND);
+	for (int i = int(-spacing / 2)*roadSize; i < int(spacing / 2)*roadSize + spacing; i += spacing){
+		for (int j = int((-99) / roadSize); j < int(100 / roadSize); j += 2){
+			glBegin(GL_QUADS);
+			glNormal3f(0.0, 1.0, 0.0);
+			if (i != j){
+				glTexCoord2f(1, 0); glVertex3f(roadSize*(-1.0 + i), 0.1, roadSize*(-1.0 + j));
+				glTexCoord2f(1, 1); glVertex3f(roadSize*(1.0 + i), 0.1, roadSize*(-1.0 + j));
+				glTexCoord2f(0, 1); glVertex3f(roadSize*(1.0 + i), 0.1, roadSize*(1.0 + j));
+				glTexCoord2f(0, 0); glVertex3f(roadSize*(-1.0 + i), 0.1, roadSize*(1.0 + j));
+			}
+			glEnd();
+		}
+	}
+	glDisable(GL_TEXTURE_2D);
+
+
+	//Render the intersections
+	glEnable(GL_TEXTURE_2D);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, roadX);
+	glDisable(GL_BLEND);
+	for (int i = int(-spacing / 2)*roadSize; i < int(spacing / 2)*roadSize + spacing; i += spacing){
+		for (int j = int((-99) / roadSize); j < int(100 / roadSize); j += 2){
+			glBegin(GL_QUADS);
+			glNormal3f(0.0, 1.0, 0.0);
+			if (i != j){
+				glTexCoord2f(1, 0); glVertex3f(roadSize*(-1.0 + i), 0.1, roadSize*(-1.0 + j));
+				glTexCoord2f(1, 1); glVertex3f(roadSize*(1.0 + i), 0.1, roadSize*(-1.0 + j));
+				glTexCoord2f(0, 1); glVertex3f(roadSize*(1.0 + i), 0.1, roadSize*(1.0 + j));
+				glTexCoord2f(0, 0); glVertex3f(roadSize*(-1.0 + i), 0.1, roadSize*(1.0 + j));
+			}
+			glEnd();
+		}
+	}
+	glDisable(GL_TEXTURE_2D);
+
+	createCity(roadSize);
 }
 
 void RoadGrid::createCity(float roadSize){
+	
 	//Render a skyscrapper
-	for (int j = 0; j < 3; j++){
+	/*for (int j = 0; j < 3; j++){
 		for (int i = 0; i < 3; i++){
 			tester->renderSkyscrapper(randomWidth, randomHeights[0 + i], (roadSize + randomWidth) + 7 * i, -3.0);
 			tester->renderSkyscrapper(randomWidth, randomHeights[1 + i], (roadSize + randomWidth) + 7 * i, -10.0);
 			tester->renderSkyscrapper(randomWidth, randomHeights[2 + i], (roadSize + randomWidth) + 7 * i, -17.0);
 		}
+	}*/
+	for (auto it = buildings.begin(); it != buildings.end(); ++it) {
+		(*it)->render();
 	}
+
 
 
 }
 
 
 
-unsigned char* loadPPM(const char* filename, int& width, int& height){
+unsigned char* loadPPM(const char* filename, int width, int height){
 
 	const int BUFSIZE = 128;
 	FILE* fp;
@@ -142,13 +219,16 @@ unsigned char* loadPPM(const char* filename, int& width, int& height){
 	// Read magic number:
 	retval_fgets = fgets(buf[0], BUFSIZE, fp);
 
+	/*Removed because it breaks everything*/
+
+
 	// Read width and height:
-	do{
-		retval_fgets = fgets(buf[0], BUFSIZE, fp);
-	} while (buf[0][0] == '#');
-	retval_sscanf = sscanf(buf[0], "%s %s", buf[1], buf[2]);
-	width = atoi(buf[1]);
-	height = atoi(buf[2]);
+	//do{
+	//	retval_fgets = fgets(buf[0], BUFSIZE, fp);
+	//} while (buf[0][0] == '#');
+	//retval_sscanf = sscanf(buf[0], "%s %s", buf[1], buf[2]);
+	//width = atoi(buf[1]);
+	//height = atoi(buf[2]);
 
 	// Read maxval:
 	do{
@@ -176,10 +256,22 @@ unsigned char* loadPPM(const char* filename, int& width, int& height){
 void RoadGrid::loadTexture(){
 
 	// Load image file
-	tdata1 = loadPPM("darkRoad2.ppm", twidth, theight);
+	regRoad = loadPPM("../res/textures/regRoad.ppm", 512, 512);
+	regRoadRotated = loadPPM("../res/textures/regRoad.ppm", 512, 512);
+	road = loadPPM("../res/textures/road.ppm", 512, 512);
+	roadEmpty = loadPPM("../res/textures/roadEmpty.ppm", 512, 512);
+	roadT = loadPPM("../res/textures/roadT.ppm", 512, 512);
+	roadTurn = loadPPM("../res/textures/roadTurn.ppm", 512, 512);
+	roadTurnLarge = loadPPM("../res/textures/roadTurnLarge.ppm", 512, 512);
+	roadX = loadPPM("../res/textures/roadX.ppm", 512, 512);
 
 	//Check to make sure the textures existed
-	if (tdata1 == NULL) return;
+	if (road == NULL) return;
+	if (roadEmpty == NULL) return;
+	if (roadT == NULL) return;
+	if (roadTurn == NULL) return;
+	if (roadTurnLarge == NULL) return;
+	if (roadX == NULL) return;
 
 	// Create ID for texture
 	glGenTextures(1, &texture[0]);
@@ -196,7 +288,9 @@ void RoadGrid::loadTexture(){
 	// Set bi-linear filtering for both minification and magnification
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	std::cout << "Successfully loaded texture" << std::endl;
+	if (glGetError() != GL_NO_ERROR)
+		std::cerr << gluErrorString(glGetError()) << std::endl;
+
 	//glTexImage2D(GL_TEXTURE_2D, 0, 3, twidth, theight, 0, GL_RGB, GL_UNSIGNED_BYTE, tdata1);
 
 }
@@ -225,10 +319,10 @@ void RoadGrid::loadRawTexture(GLuint texture,const char* filename, int width, in
 	
 	//glActiveTexture(GL_TEXTURE1);
 	// allocate a texture name
-	//glGenTextures(1, &texture);
+	glGenTextures(1, &texture);
 	
 	// select current texture
-	glBindTexture(GL_TEXTURE_2D, texture);
+	//glBindTexture(GL_TEXTURE_2D, texture);
 
 	// Make sure no bytes are padded
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

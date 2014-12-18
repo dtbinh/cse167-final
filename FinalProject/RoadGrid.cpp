@@ -15,7 +15,35 @@ RoadGrid::RoadGrid(){
 		randomHeight = rand() % 40;
 		randomHeights[i] = randomHeight;
 	}
-	
+
+	//Create random heights for houses
+	for (int i = 0; i < 10; i++){
+		for (int j = 0; j < 10; j++){
+			for (int k = 0; k < 14; k++){
+				randomHeight = 1 + (rand() % (int)(4 - 1 + 1));
+				randomHeightsHouses[i][j][k] = randomHeight;
+			}
+		}
+	}
+
+	//Create random heights for the skyscrappers
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 4; j++){
+			for (int k = 0; k < 4; k++){
+				randomHeight = 40 + (rand() % (int)(60 - 40 + 1));
+				randomHeightsTowers[i][j][k] = randomHeight;
+			}
+		}
+	}
+
+	//Create random heights for the small towers
+	for (int i = 0; i < 10; i++){
+		randomHeight = 10 + (rand() % (int)(14 - 10 + 1));
+		randomHeightsSmallTowers[i] = randomHeight;
+	}
+
+
+
 	// load road textures
 	/*loadRawTexture(texture[0], "../res/textures/road.raw", 512, 512);
 	loadRawTexture(texture[1], "../res/textures/roadEmpty.raw", 512, 512);
@@ -25,24 +53,111 @@ RoadGrid::RoadGrid(){
 
 	int roadSize = 1;
 	// create buildings
-	for (int j = 0; j < 3; j++){
-		for (int i = 0; i < 3; i++){
-			/*tester->renderSkyscrapper(randomWidth, randomHeights[0 + i], (roadSize + randomWidth) + 7 * i, -3.0);
-			tester->renderSkyscrapper(randomWidth, randomHeights[1 + i], (roadSize + randomWidth) + 7 * i, -10.0);
-			tester->renderSkyscrapper(randomWidth, randomHeights[2 + i], (roadSize + randomWidth) + 7 * i, -17.0);*/
-			buildings.push_back(new Building((roadSize + randomWidth) + 13 * i, randomHeights[0 + i] / 2, -13.0, randomWidth, randomHeights[0 + i], 4));
-			//buildings.push_back(new Building((roadSize + randomWidth) + 10 * i, randomHeights[1 + i] / 2, -10.0, randomWidth, randomHeights[1 + i], randomWidth));
-			//buildings.push_back(new Building((roadSize + randomWidth) + 10 * i, randomHeights[2 + i] / 2, -17.0, randomWidth, randomHeights[2 + i], randomWidth));
+	//for (int j = 0; j < 3; j++){
+	for (int i = 0; i < 3; i++){
+		/*tester->renderSkyscrapper(randomWidth, randomHeights[0 + i], (roadSize + randomWidth) + 7 * i, -3.0);
+		tester->renderSkyscrapper(randomWidth, randomHeights[1 + i], (roadSize + randomWidth) + 7 * i, -10.0);
+		tester->renderSkyscrapper(randomWidth, randomHeights[2 + i], (roadSize + randomWidth) + 7 * i, -17.0);*/
+		//buildings.push_back(new Building((roadSize + randomWidth) + 13 * i, randomHeights[0 + i] / 2, -13.0, randomWidth, randomHeights[0 + i], 4));			//buildings.push_back(new Building((roadSize + randomWidth) + 10 * i, randomHeights[1 + i] / 2, -10.0, randomWidth, randomHeights[1 + i], randomWidth));
+		//buildings.push_back(new Building((roadSize + randomWidth) + 10 * i, randomHeights[2 + i] / 2, -17.0, randomWidth, randomHeights[2 + i], randomWidth));
 
-		}
 	}
+	buildings.push_back(new Building(-10, randomHeightsTowers[0][0][0] / 2.0, 10, 10, randomHeightsTowers[0][0][0], 10));
+	buildings.push_back(new Building(-30, randomHeightsTowers[0][0][1] / 2.0, 10, 10, randomHeightsTowers[0][0][1], 10));
+	buildings.push_back(new Building(-30, randomHeightsTowers[0][0][2] / 6.0, -10, 10, randomHeightsTowers[0][0][2] /3.0, 10));
+	buildings.push_back(new Building(-10, randomHeightsTowers[0][0][3] / 2.0, -10, 10, randomHeightsTowers[0][0][3], 10));
+	buildings.push_back(new Building(10, randomHeightsTowers[0][1][0] / 2.0, 10, 10, randomHeightsTowers[0][1][0], 10));
+	buildings.push_back(new Building(30, randomHeightsTowers[0][2][0] / 2.0, 10, 10, randomHeightsTowers[0][2][0], 10));
+	/*buildings.push_back(new Building(-10, randomHeightsTowers[0][2][2] / 2.0, 10, 5, randomHeightsTowers[0][2][2], 5));
+	buildings.push_back(new Building(-10, randomHeightsTowers[0][2][3] / 2.0, 10, 5, randomHeightsTowers[0][2][3], 5));
+*/
+	//}
 }
 
-void RoadGrid::render(int pid){
-
+void RoadGrid::render(){
+	
 	float roadSize = 4;
 	float spacing = 10;
-	createGrid(roadSize, spacing, pid);
+	createGrid(roadSize, spacing);
+	glColor3f(1.0, 0.0, 0.0);
+	//Upper blocks
+	createBlock(-72.0, -92.0, 0);
+	createBlock(-32.0, -92.0, 1);
+	createBlock(8.0, -92.0, 2);
+	createBlock(48.0, -92.0, 3);
+
+	//////Lower blocks
+	createBlock(-72.0, 68.0, 4);
+	createBlock(-32.0, 68.0, 5);
+	createBlock(8.0, 68.0, 6);
+	createBlock(48.0, 68.0, 7);
+
+	//Creates downTown
+	//createDowntown(-10.0, 10.0, 0, 0);
+	//createDowntown(-30.0, 10.0, 1, 0);
+	//createDowntown(-30.0, -10.0, 2, 0);
+	//createDowntown(-10.0, -10.0, 3, 0);
+
+	////Creates downTown second block
+	//createDowntown(10.0, 10.0, 0, 1);
+	//createDowntown(30.0, 10.0, 0, 1);
+
+	//////Create midTown
+	createMidtown(-33.0, 27.0, 0);
+	createMidtown(-33.0, 40.0, 1);
+	createMidtown(-33.0, 53.0, 2);
+
+	createMidtown(-20.0, 27.0, 3);
+	createMidtown(-20.0, 40.0, 4);
+	createMidtown(-20.0, 53.0, 5);
+
+	createMidtown(-7.0, 27.0, 6);
+	createMidtown(-7.0, 40.0, 7);
+	createMidtown(-7.0, 53.0, 8);
+
+	////Create midTown Block 2
+	createMidtown(7.0, 27.0, 0);
+	createMidtown(7.0, 40.0, 1);
+	createMidtown(7.0, 53.0, 2);
+
+	createMidtown(20.0, 27.0, 3);
+	createMidtown(20.0, 40.0, 4);
+	createMidtown(20.0, 53.0, 5);
+
+	createMidtown(33, 27.0, 6);
+	createMidtown(33.0, 40.0, 7);
+	createMidtown(33.0, 53.0, 8);
+
+	////Create midTown Block 3
+	createMidtown(47.0, 27.0, 0);
+	createMidtown(47.0, 40.0, 1);
+	createMidtown(47.0, 53.0, 2);
+
+	createMidtown(59.0, 27.0, 3);
+	createMidtown(59.0, 40.0, 4);
+	createMidtown(59.0, 53.0, 5);
+
+	createMidtown(73, 27.0, 6);
+	createMidtown(73, 40.0, 7);
+	createMidtown(73, 53.0, 8);
+
+	//Create midTown Block 4
+	createMidtown(47.0, -27.0, 0);
+	createMidtown(47.0, -40.0, 1);
+	createMidtown(47.0, -53.0, 2);
+
+	createMidtown(59.0, -27.0, 3);
+	createMidtown(59.0, -40.0, 4);
+	createMidtown(59.0, -53.0, 5);
+
+	createMidtown(73, -27.0, 6);
+	createMidtown(73, -40.0, 7);
+	createMidtown(73, -53.0, 8);
+
+	createMidtown(73, -27.0, 6);
+	createMidtown(73, -40.0, 7);
+	createMidtown(73, -53.0, 8);
+
 
 }
 
@@ -65,7 +180,7 @@ float RoadGrid::createRandomHeight(int maxHeight){
 }
 
 
-void RoadGrid::createGrid(float roadSize, float spacing, int shaderPid){
+void RoadGrid::createGrid(float roadSize, float spacing){
 	/*************************************************
 	glPushMatrix();
 	glEnable(GL_TEXTURE_2D);
@@ -115,7 +230,7 @@ void RoadGrid::createGrid(float roadSize, float spacing, int shaderPid){
 	
 	glPopMatrix();
 	*************************************************/
-
+	glColor3f(1.0, 1.0, 1.0);
 	//Creates the roads that runs lenght wise
 	glEnable(GL_TEXTURE_2D);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, regRoad);
@@ -251,18 +366,21 @@ void RoadGrid::loadTexture(){
 	regRoad = loadPPM("../res/textures/regRoad.ppm", 512, 512);
 	regRoadRotated = loadPPM("../res/textures/regRoad.ppm", 512, 512);
 	road = loadPPM("../res/textures/road.ppm", 512, 512);
-	roadEmpty = loadPPM("../res/textures/roadEmpty.ppm", 512, 512);
-	roadT = loadPPM("../res/textures/roadT.ppm", 512, 512);
-	roadTurn = loadPPM("../res/textures/roadTurn.ppm", 512, 512);
-	roadTurnLarge = loadPPM("../res/textures/roadTurnLarge.ppm", 512, 512);
+	//roadEmpty = loadPPM("../res/textures/roadEmpty.ppm", 512, 512);
+	//roadT = loadPPM("../res/textures/roadT.ppm", 512, 512);
+	//roadTurn = loadPPM("../res/textures/roadTurn.ppm", 512, 512);
+	//roadTurnLarge = loadPPM("../res/textures/roadTurnLarge.ppm", 512, 512);
 	roadX = loadPPM("../res/textures/roadX.ppm", 512, 512);
+	//parkingLot = loadPPM("../res/textures/ParkingLot.ppm", 512, 512);
+	//windows = loadPPM("../res/textures/windows.ppm", 599, 2425);
+
 
 	//Check to make sure the textures existed
 	if (road == NULL) return;
-	if (roadEmpty == NULL) return;
-	if (roadT == NULL) return;
-	if (roadTurn == NULL) return;
-	if (roadTurnLarge == NULL) return;
+	//if (roadEmpty == NULL) return;
+	//if (roadT == NULL) return;
+	//if (roadTurn == NULL) return;
+	//if (roadTurnLarge == NULL) return;
 	if (roadX == NULL) return;
 
 	// Create ID for texture
@@ -356,4 +474,199 @@ void RoadGrid::loadRawTexture(GLuint texture,const char* filename, int width, in
 	
 
 	//return texture;
+}
+
+void RoadGrid::createBlock(float x, float y, int block){
+
+	for (int i = 0; i < 5; i++){
+		for (int j = 0; j < 5; j++){
+			this->renderBuildings(2, randomHeightsHouses[i][j][block], x + 6 * j, y + 6 * i);
+		}
+	}
+
+	//tester->renderSkyscrapper(1, randomHeightsHouses[0], -75.0, -95.0);
+	//tester->renderSkyscrapper(1, randomHeightsHouses[1], -75.0, -92.0);
+	//tester->renderSkyscrapper(1, randomHeightsHouses[2], -75.0, -89.0);
+	//tester->renderSkyscrapper(1, randomHeightsHouses[3], -75.0, -86.0);
+	//tester->renderSkyscrapper(1, randomHeightsHouses[4], -75.0, -83.0);
+	//tester->renderSkyscrapper(1, randomHeightsHouses[5], -75.0, -80.0);
+
+
+}
+
+void RoadGrid::createDowntown(float x, float y, int block, int index){
+	this->renderSkyscrapper(5, randomHeightsTowers[0][index][block], x, y);
+}
+
+void RoadGrid::createMidtown(float x, float y, int block){
+	this->renderBuildings(3, randomHeightsSmallTowers[block], x, y);
+}
+
+
+void RoadGrid::renderSkyscrapper(float width, float height, float xCoord, float zCoord){
+
+	//glEnable(GL_TEXTURE_2D);
+	//glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, roadEmpty);
+	//glDisable(GL_BLEND);
+	glBegin(GL_QUADS);
+	glNormal3f(0.0, 0.0, 1.0);
+	//glTexCoord2f(1, 0); 
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	//glTexCoord2f(1, 1); 
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	//glTexCoord2f(0, 1); 
+	glVertex3f((1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	//glTexCoord2f(0, 0); 
+	glVertex3f((-1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+
+	//glEnable(GL_TEXTURE_2D);
+	//glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, roadEmpty);
+	//glDisable(GL_BLEND);
+	glBegin(GL_QUADS);
+	//// Draw left side:
+	glNormal3f(-1.0, 0.0, 0.0);
+	//glTexCoord2f(1, 0);
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	//glTexCoord2f(1, 1); 
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
+	//glTexCoord2f(0, 1); 
+	glVertex3f((-1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
+	//glTexCoord2f(0, 0); 
+	glVertex3f((-1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	glEnd();
+
+	//glEnable(GL_TEXTURE_2D);
+	//glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, roadEmpty);
+	//glDisable(GL_BLEND);
+	glBegin(GL_QUADS);
+	//// Draw right side:
+	glNormal3f(1.0, 0.0, 0.0);
+	//glTexCoord2f(1, 0); 
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	//glTexCoord2f(1, 1); 
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
+	//glTexCoord2f(0, 1); 
+	glVertex3f((1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
+	//glTexCoord2f(0, 0); 
+	glVertex3f((1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	glEnd();
+
+
+	//glEnable(GL_TEXTURE_2D);
+	//glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, roadEmpty);
+	//glDisable(GL_BLEND);
+	glBegin(GL_QUADS);
+	//// Draw back face:
+	glNormal3f(0.0, 0.0, -1.0);
+	//glTexCoord2f(1, 0); 
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
+	//glTexCoord2f(1, 1); 
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
+	//glTexCoord2f(0, 1); 
+	glVertex3f((1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
+	//glTexCoord2f(0, 0); 
+	glVertex3f((-1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
+	glEnd();
+
+	glEnable(GL_TEXTURE_2D);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, roadEmpty);
+	glDisable(GL_BLEND);
+	glBegin(GL_QUADS);
+	//// Draw top side:
+	glNormal3f(0.0, 1.0, 0.0);
+	//glTexCoord2f(1, 0); 
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	//glTexCoord2f(1, 1); 
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	//glTexCoord2f(0, 1); 
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, (-1.0 * width) + zCoord);
+	//glTexCoord2f(0, 0); 
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (-1.0 * width) + zCoord);
+	glEnd();
+
+	glEnable(GL_TEXTURE_2D);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, roadEmpty);
+	glDisable(GL_BLEND);
+	glBegin(GL_QUADS);
+	// Draw bottom side:s
+	glNormal3f(0.0, -1.0, 0.0);
+	//glTexCoord2f(1, 0); 
+	glVertex3f((-1.0 * width) + xCoord, -0.9, (-1.0 * width) + zCoord);
+	//glTexCoord2f(1, 1); 
+	glVertex3f((1.0 * width) + xCoord, -0.9, (-1.0 * width) + zCoord);
+	//glTexCoord2f(0, 1); 
+	glVertex3f((1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	//glTexCoord2f(0, 0); 
+	glVertex3f((-1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	glEnd();
+}
+
+
+
+void RoadGrid::renderBuildings(float width, float height, float xCoord, float zCoord){
+
+	glDisable(GL_TEXTURE_2D);
+
+	glBegin(GL_QUADS);
+	glNormal3f(0.0, 0.0, 1.0);
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	glVertex3f((-1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+
+
+	glBegin(GL_QUADS);
+	//// Draw left side:
+	glNormal3f(-1.0, 0.0, 0.0);
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
+	glVertex3f((-1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
+	glVertex3f((-1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	glEnd();
+
+
+	glBegin(GL_QUADS);
+	//// Draw right side:
+	glNormal3f(1.0, 0.0, 0.0);
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	glEnd();
+
+
+
+	glBegin(GL_QUADS);
+	//// Draw back face:
+	glNormal3f(0.0, 0.0, -1.0);
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
+	glVertex3f((-1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
+	glEnd();
+
+
+	glBegin(GL_QUADS);
+	//// Draw top side:
+	glNormal3f(0.0, 1.0, 0.0);
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, (-1.0 * width) + zCoord);
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (-1.0 * width) + zCoord);
+	glEnd();
+
+
+	glBegin(GL_QUADS);
+	// Draw bottom side:
+	glNormal3f(0.0, -1.0, 0.0);
+	glVertex3f((-1.0 * width) + xCoord, -0.9, (-1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, -0.9, (-1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	glVertex3f((-1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	glEnd();
+
 }

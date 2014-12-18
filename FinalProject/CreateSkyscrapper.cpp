@@ -6,52 +6,56 @@ CreateSkyscrapper::~CreateSkyscrapper(){}
 
 void CreateSkyscrapper::renderSkyscrapper(float width, float height, float xCoord, float zCoord){
 
+	glEnable(GL_TEXTURE_2D);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, windows);
+	glDisable(GL_BLEND);
 	glBegin(GL_QUADS);
-	
-		//glColor3f(0.0, 0.0, 1.0);
 
-		glNormal3f(0.0, 0.0, 1.0);
-		glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
-		glVertex3f((1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
-		glVertex3f((1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
-		glVertex3f((-1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	//glColor3f(0.0, 0.0, 1.0);
 
-		//// Draw left side:
-		glNormal3f(-1.0, 0.0, 0.0);
-		glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
-		glVertex3f((-1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
-		glVertex3f((-1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
-		glVertex3f((-1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	glNormal3f(0.0, 0.0, 1.0);
+	glTexCoord2f(1, 0); glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	glTexCoord2f(1, 1); glVertex3f((1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	glTexCoord2f(0, 1); glVertex3f((1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	glTexCoord2f(0, 0); glVertex3f((-1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
 
-		//// Draw right side:
-		glNormal3f(1.0, 0.0, 0.0);
-		glVertex3f((1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
-		glVertex3f((1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
-		glVertex3f((1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
-		glVertex3f((1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	//// Draw left side:
+	glNormal3f(-1.0, 0.0, 0.0);
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
+	glVertex3f((-1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
+	glVertex3f((-1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
 
-		//// Draw back face:
-		glNormal3f(0.0, 0.0, -1.0);
-		glVertex3f((-1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
-		glVertex3f((1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
-		glVertex3f((1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
-		glVertex3f((-1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
+	//// Draw right side:
+	glNormal3f(1.0, 0.0, 0.0);
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
 
-		//// Draw top side:
-		glNormal3f(0.0, 1.0, 0.0);
-		glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
-		glVertex3f((1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
-		glVertex3f((1.0 * width) + xCoord, 1.0 + height, (-1.0 * width) + zCoord);
-		glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (-1.0 * width) + zCoord);
+	//// Draw back face:
+	glNormal3f(0.0, 0.0, -1.0);
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, -(1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
+	glVertex3f((-1.0 * width) + xCoord, -0.9, -(1.0 * width) + zCoord);
 
-		// Draw bottom side:
-		glNormal3f(0.0, -1.0, 0.0);
-		glVertex3f((-1.0 * width) + xCoord, -0.9, (-1.0 * width) + zCoord);
-		glVertex3f((1.0 * width) + xCoord, -0.9, (-1.0 * width) + zCoord);
-		glVertex3f((1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
-		glVertex3f((-1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	//// Draw top side:
+	glNormal3f(0.0, 1.0, 0.0);
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, (1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, 1.0 + height, (-1.0 * width) + zCoord);
+	glVertex3f((-1.0 * width) + xCoord, 1.0 + height, (-1.0 * width) + zCoord);
+
+	// Draw bottom side:
+	glNormal3f(0.0, -1.0, 0.0);
+	glVertex3f((-1.0 * width) + xCoord, -0.9, (-1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, -0.9, (-1.0 * width) + zCoord);
+	glVertex3f((1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
+	glVertex3f((-1.0 * width) + xCoord, -0.9, (1.0 * width) + zCoord);
 
 	glEnd();
+	glDisable(GL_TEXTURE_2D);
 
 }
 

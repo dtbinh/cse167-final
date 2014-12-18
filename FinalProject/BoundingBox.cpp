@@ -8,21 +8,21 @@ BoundingBox::BoundingBox()
 
 BoundingBox::BoundingBox(GLfloat *c, GLfloat w, GLfloat h, GLfloat d) : width(w), height(h), depth(d) {
 	center[0] = c[0]; center[1] = c[1]; center[2] = c[2];
-	minX = center[0] - width / 2.0;
-	maxX = center[0] + width / 2.0;
-	minY = center[1] - height / 2.0;
-	maxY = center[1] + height / 2.0;
-	minZ = center[2] - depth / 2.0;
-	maxZ = center[2] + depth / 2.0;
+	_minX = center[0] - width / 2.0;
+	_maxX = center[0] + width / 2.0;
+	_minY = center[1] - height / 2.0;
+	_maxY = center[1] + height / 2.0;
+	_minZ = center[2] - depth / 2.0;
+	_maxZ = center[2] + depth / 2.0;
 }
 BoundingBox::BoundingBox(GLfloat xc, GLfloat yc, GLfloat zc, GLfloat w, GLfloat h, GLfloat d) : width(w), height(h), depth(d) {
 	center[0] = xc; center[1] = yc; center[2] = zc;
-	minX = center[0] - width / 2.0;
-	maxX = center[0] + width / 2.0;
-	minY = center[1] - height / 2.0;
-	maxY = center[1] + height / 2.0;
-	minZ = center[2] - depth / 2.0;
-	maxZ = center[2] + depth / 2.0;
+	_minX = center[0] - width / 2.0;
+	_maxX = center[0] + width / 2.0;
+	_minY = center[1] - height / 2.0;
+	_maxY = center[1] + height / 2.0;
+	_minZ = center[2] - depth / 2.0;
+	_maxZ = center[2] + depth / 2.0;
 }
 
 BoundingBox::~BoundingBox() {
@@ -31,12 +31,29 @@ BoundingBox::~BoundingBox() {
 void BoundingBox::set(GLfloat *c, GLfloat w, GLfloat h, GLfloat d) {
 	center[0] = c[0]; center[1] = c[1]; center[2] = c[2];
 	width = w; height = h; depth = d;
-	minX = center[0] - width / 2.0;
-	maxX = center[0] + width / 2.0;
-	minY = center[1] - height / 2.0;
-	maxY = center[1] + height / 2.0;
-	minZ = center[2] - depth / 2.0;
-	maxZ = center[2] + depth / 2.0;
+	_minX = center[0] - width / 2.0;
+	_maxX = center[0] + width / 2.0;
+	_minY = center[1] - height / 2.0;
+	_maxY = center[1] + height / 2.0;
+	_minZ = center[2] - depth / 2.0;
+	_maxZ = center[2] + depth / 2.0;
+
+	//printf("Center: (%f, %f, %f)\n", center[0], center[1], center[2]);
+	
+
+}
+
+void BoundingBox::set(float cx, float cy, float cz, float w, float h, float d) {
+	center[0] = cx;
+	center[1] = cy;
+	center[2] = cz;
+	width = w; height = h; depth = d;
+	_minX = center[0] - width / 2.0;
+	_maxX = center[0] + width / 2.0;
+	_minY = center[1] - height / 2.0;
+	_maxY = center[1] + height / 2.0;
+	_minZ = center[2] - depth / 2.0;
+	_maxZ = center[2] + depth / 2.0;
 }
 
 bool BoundingBox::collidesWith(BoundingBox &other) {
@@ -55,55 +72,56 @@ void BoundingBox::draw() {
 	glColor3f(1.0, 0.0, 0.0);
 
 	
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//glLineWidth(1.0f);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glLineWidth(1.0f);
 	glBegin(GL_QUADS);
 
 
 
-	//glNormal3f(0.0, 0.0, 1.0);
-	glVertex3f((-1.0 * width) + getCenterX(), 1.0 + height, (1.0 * width) + getCenterZ());
-	glVertex3f((1.0 * width) + getCenterX(), 1.0 + height, (1.0 * width) + getCenterZ());
-	glVertex3f((1.0 * width) + getCenterX(), -0.9, (1.0 * width) + getCenterZ());
-	glVertex3f((-1.0 * width) + getCenterX(), -0.9, (1.0 * width) + getCenterZ());
+	// Front
+	glNormal3f(0.0, 0.0, 1.0);
+	glVertex3f(minX(), minY(), maxZ());
+	glVertex3f(maxX(), minY(), maxZ());
+	glVertex3f(maxX(), maxY(), maxZ());
+	glVertex3f(minX(), maxY(), maxZ());
 
-	//// Draw left side:
-	//glNormal3f(-1.0, 0.0, 0.0);
-	glVertex3f((-1.0 * width) + getCenterX(), 1.0 + height, (1.0 * width) + getCenterZ());
-	glVertex3f((-1.0 * width) + getCenterX(), 1.0 + height, -(1.0 * width) + getCenterZ());
-	glVertex3f((-1.0 * width) + getCenterX(), -0.9, -(1.0 * width) + getCenterZ());
-	glVertex3f((-1.0 * width) + getCenterX(), -0.9, (1.0 * width) + getCenterZ());
+	// Right
+	glNormal3f(1.0, 0.0, 0.0);
+	glVertex3f(maxX(), minY(), maxZ());
+	glVertex3f(maxX(), minY(), minZ());
+	glVertex3f(maxX(), maxY(), minZ());
+	glVertex3f(maxX(), maxY(), maxZ());
 
-	//// Draw right side:
-	//glNormal3f(1.0, 0.0, 0.0);
-	glVertex3f((1.0 * width) + getCenterX(), 1.0 + height, (1.0 * width) + getCenterZ());
-	glVertex3f((1.0 * width) + getCenterX(), 1.0 + height, -(1.0 * width) + getCenterZ());
-	glVertex3f((1.0 * width) + getCenterX(), -0.9, -(1.0 * width) + getCenterZ());
-	glVertex3f((1.0 * width) + getCenterX(), -0.9, (1.0 * width) + getCenterZ());
+	// Back
+	glNormal3f(0.0, 0.0, -1.0);
+	glVertex3f(maxX(), minY(), minZ());
+	glVertex3f(minX(), minY(), minZ());
+	glVertex3f(minX(), maxY(), minZ());
+	glVertex3f(maxX(), maxY(), minZ());
 
-	//// Draw back face:
-	//glNormal3f(0.0, 0.0, -1.0);
-	glVertex3f((-1.0 * width) + getCenterX(), 1.0 + height, -(1.0 * width) + getCenterZ());
-	glVertex3f((1.0 * width) + getCenterX(), 1.0 + height, -(1.0 * width) + getCenterZ());
-	glVertex3f((1.0 * width) + getCenterX(), -0.9, -(1.0 * width) + getCenterZ());
-	glVertex3f((-1.0 * width) + getCenterX(), -0.9, -(1.0 * width) + getCenterZ());
+	// Left
+	glNormal3f(-1.0, 0.0, 0.0);
+	glVertex3f(minX(), minY(), minZ());
+	glVertex3f(minX(), minY(), maxZ());
+	glVertex3f(minX(), maxY(), maxZ());
+	glVertex3f(minX(), maxY(), minZ());
 
-	//// Draw top side:
-	//glNormal3f(0.0, 1.0, 0.0);
-	glVertex3f((-1.0 * width) + getCenterX(), 1.0 + height, (1.0 * width) + getCenterZ());
-	glVertex3f((1.0 * width) + getCenterX(), 1.0 + height, (1.0 * width) + getCenterZ());
-	glVertex3f((1.0 * width) + getCenterX(), 1.0 + height, (-1.0 * width) + getCenterZ());
-	glVertex3f((-1.0 * width) + getCenterX(), 1.0 + height, (-1.0 * width) + getCenterZ());
+	// Top
+	glNormal3f(0.0, 1.0, 0.0);
+	glVertex3f(minX(), maxY(), maxZ());
+	glVertex3f(maxX(), maxY(), maxZ());
+	glVertex3f(maxX(), maxY(), minZ());
+	glVertex3f(minX(), maxY(), minZ());
 
-	// Draw bottom side:
-	//glNormal3f(0.0, -1.0, 0.0);
-	glVertex3f((-1.0 * width) + getCenterX(), -0.9, (-1.0 * width) + getCenterZ());
-	glVertex3f((1.0 * width) + getCenterX(), -0.9, (-1.0 * width) + getCenterZ());
-	glVertex3f((1.0 * width) + getCenterX(), -0.9, (1.0 * width) + getCenterZ());
-	glVertex3f((-1.0 * width) + getCenterX(), -0.9, (1.0 * width) + getCenterZ());
+	// Bottom
+	glNormal3f(0.0, -1.0, 0.0);
+	glVertex3f(maxX(), minY(), maxZ());
+	glVertex3f(minX(), minY(), maxZ());
+	glVertex3f(minX(), minY(), minZ());
+	glVertex3f(maxX(), minY(), minZ());
 
 	glEnd();
 	glPopMatrix();
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

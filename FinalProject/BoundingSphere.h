@@ -9,20 +9,22 @@ private:
 	Vector3 center;
 	float radius;
 	bool visible;
+	float _minX, _maxX, _minY, _maxY, _minZ, _maxZ;
 
 public:
 	BoundingSphere();
 	BoundingSphere(Vector3& center, float radius);
-	BoundingSphere(double x, double y, double z, float radius);
+	BoundingSphere(float x, float y, float z, float radius);
 	~BoundingSphere();
 
-	void set(Vector3& c, float r) { center = c; radius = r; }
+	void set(Vector3& c, float r);
+	void set(float x, float y, float z, float r);
 
 	Vector3& getCenter() { return center; }
-	void setCenter(double x, double y, double z) { center.set(x, y, z); }
+	void setCenter(float x, float y, float z) { set(x, y, z, this->radius); }
 
 	float getRadius() { return radius; }
-	void setRadius(float r) { radius = r; }
+	void setRadius(float r) { set(this->center, r); }
 
 	bool isVisible() { return visible; }
 	void setVisible(bool v) { visible = v; }
@@ -34,5 +36,14 @@ public:
 	int collidesWith(BoundingBox&);
 
 	bool collidesWithPlane(Vector3& p, Vector3& n);
+
+	float minX() { return _minX; }
+	float maxX() { return _maxX; }
+
+	float minY() { return _minY; }
+	float maxY() { return _maxY; }
+
+	float minZ() { return _minZ; }
+	float maxZ() { return _maxZ; }
 };
 

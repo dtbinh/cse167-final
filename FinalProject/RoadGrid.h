@@ -20,7 +20,11 @@ protected:
 	float xPosition, yPosition;
 	GLuint texture[5];     // storage for five texture
 	bool load = true;
-	float randomHeights[900];
+	float randomHeights[100];
+	float randomHeightsHouses[10][10][14];
+	float randomHeightsTowers[4][4][4];
+	float randomHeightsSmallTowers[11];
+
 
 	vector<Building*> buildings;
 
@@ -44,13 +48,24 @@ public:
 	unsigned char* roadTurn;
 	unsigned char* roadTurnLarge;
 	unsigned char* roadX;
-	
+	unsigned char* parkingLot;
+	unsigned char* Marsh;
+	unsigned char* windows;
+
+	double mult = 16;
+
 	float createRandomHeight(int);
 	float createRandomWidth(int);
-	void createGrid(float, float, int pid);
-	void render(int);
+	void createGrid(float, float);
+	void render();
 	void loadTexture();
 	void createCity(float);
+
+	void createBlock(float, float, int);
+	void createDowntown(float, float, int, int);
+	void createMidtown(float, float, int);
+	void renderSkyscrapper(float, float, float, float);
+	void renderBuildings(float, float, float, float);
 
 	void loadRawTexture(GLuint tex, const char *filename, int width, int height);
 

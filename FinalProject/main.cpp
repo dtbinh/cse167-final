@@ -34,6 +34,8 @@ Cubemap *skybox;
 Shader *skyShader;
 GLuint skyShaderCameraPosition; // used by shader
 
+/* Show boxes and camera track*/
+bool debugMode = false;
 
 /** Camera properties */
 Camera *camera;
@@ -96,7 +98,7 @@ clock_t startTime;
 void makeNewCity(){
 	renderCity = false;
 	delete makeGrid;
-	RoadGrid* makeGrid = new RoadGrid();
+	makeGrid = new RoadGrid();
 	renderCity = true;
 }
 
@@ -147,34 +149,38 @@ void calcCameraMovement() {
 	camYSpeed = yMovement;
 	camZSpeed = zMovement;
 
-	
+	// update camera position
+	camXPos += camXSpeed;
+	camYPos += camYSpeed;
+	camZPos += camZSpeed;
 
 	// check collisions
+	if (camYPos < 1.3) camYPos = 1.3;
 	for (vector<Building*>::iterator it = makeGrid->getBuildings().begin(); it != makeGrid->getBuildings().end(); ++it) {
 		int t = camera->getBoundingSphere()->collidesWith((*it)->getBoundingBox());
 		switch (t) {
 		case FRONT:
-			camZSpeed *= -1.0;
+			camZPos += 1.2;
 			printf("Front");
 			break;
 		case BACK:
-			camZSpeed *= -1.0;
+			camZPos -= 1.2;
 			printf("Back");
 			break;
 		case LEFT:
-			camXSpeed *= -1.0;
+			camXPos -= 1.2;
 			printf("Left");
 			break;
 		case RIGHT:
-			camXSpeed *= -1.0;
+			camXPos += 1.2;
 			printf("Right");
 			break;
 		case TOP:
-			camYSpeed *= -1.0;
+			camYPos += 1.2;
 			printf("Top");
 			break;
 		case BOTTOM:
-			camYSpeed *= -1.0;
+			camYPos -= 1.2;
 			printf("Bottom");
 			break;
 		}
@@ -191,10 +197,8 @@ void calcCameraMovement() {
 		//	//return;
 		//}
 	}
-	// update camera position
-	camXPos += camXSpeed;
-	camYPos += camYSpeed;
-	camZPos += camZSpeed;
+	
+	
 
 	// set camera matrix
 	camera->set(camXPos, camYPos, camZPos,
@@ -332,15 +336,15 @@ void displayCallback() {
 
 	// render lighting
 	pointLight0->enable();
-	pointLight0->draw();
+	if (debugMode) pointLight0->draw();
 	
 	if (renderCity) {
-		textureShader->bind();
+		//textureShader->bind();
 		//GLuint location = glGetUniformLocation(textureShader->getPid(), "tex");
 		//glActiveTexture(GL_TEXTURE0);
-		glUniform1iARB(glGetUniformLocation(textureShader->getPid(), "tex"), 0);
-		makeGrid->render(textureShader->getPid());
-		textureShader->unbind();
+		//glUniform1iARB(glGetUniformLocation(textureShader->getPid(), "tex"), 0);
+		makeGrid->render();
+		//textureShader->unbind();
 	}
 	/*if (renderCity){
 		makeGrid->render();
@@ -358,7 +362,8 @@ void displayCallback() {
 	bezPatch->render();
 
 	// render camera track
-	cameraTrack->render();
+	if (debugMode)
+		cameraTrack->render();
 
 	//camera->getBoundingSphere()->draw(camera->getCameraMatrix());
 	glFlush();
@@ -396,6 +401,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
 	case 'a': moveLeft = true; break;
 	case 'd': moveRight = true; break;
 	case 't': makeNewCity(); break;
+	case 'f': debugMode = !debugMode; break;
 
 	// affix camera to track
 	case 'r': cameraIsOnTrack = !cameraIsOnTrack; break;
@@ -451,7 +457,7 @@ int main(int argc, char *argv[]) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
 	glutCreateWindow(title);
-	//glutFullScreen();		// needs to be enabled in final version
+	glutFullScreen();		// needs to be enabled in final version
 
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -471,7 +477,7 @@ int main(int argc, char *argv[]) {
 	GLfloat ambient[] = { 0.0, 0.0, 0.0, 1.0 };			// ambient property for pointLight0
 	GLfloat pointSpecular[] = { 1.0, 1.0, 1.0, 1.0 };	// specular property for pointLight0
 	GLfloat pointDiffuse[] = { 1.0, 1.0, 1.0, 1.0 };	// diffuse property for pointLight0
-	GLfloat pointPos[] = { 0.0, 20.0, 0.0, 1.0 };		// position of pointLight0
+	GLfloat pointPos[] = { 0.0, 70.0, 0.0, 1.0 };		// position of pointLight0
 	pointLight0 = new PointLight(0, pointDiffuse, pointSpecular, ambient, pointPos);
 
 	glEnable(GL_NORMALIZE);

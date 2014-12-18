@@ -59,8 +59,8 @@ void Particle::update() {
 	// apply gravity
 	//if (ypos > 0.0) {
 		if (yspeed < 5.0f) yspeed -= gravity;
-		xspeed *= 0.5;
-		zspeed *= 0.5;
+		if (xspeed > 0.0) xspeed *= 0.5;
+		if (zspeed > 0.0) zspeed *= 0.5;
 		
 		move(xpos + xspeed, ypos + yspeed, zpos + zspeed);
 	//}
@@ -68,9 +68,12 @@ void Particle::update() {
 
 void Particle::move(GLfloat x, GLfloat y, GLfloat z) {
 	// hit ground -> bounce
-	if (ypos <= 0.0) {
+	if (ypos <= 0.1) {
 		float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		yspeed *= -0.4 * r;
+		if (yspeed < 0.01) yspeed = 0.0;
+		if (xspeed < 0.01) xspeed = 0.0;
+		if (zspeed < 0.01) zspeed = 0.0;
 	}
 	xpos += xspeed;
 	ypos += yspeed;
@@ -125,7 +128,7 @@ void ParticleEmitter::update() {
 void ParticleEmitter::render() {
 	glPushMatrix();
 	glPointSize(3.0f);
-	//glColor3f(p_color[0], p_color[1], p_color[2]);
+	glColor3f(p_color[0], p_color[1], p_color[2]);
 	glBegin(GL_POINTS);
 	for (auto it = particles.begin(); it != particles.end(); ++it) {
 		if ((*it)->age >= 0)

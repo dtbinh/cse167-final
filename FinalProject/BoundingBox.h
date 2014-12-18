@@ -1,10 +1,10 @@
 #pragma once
 
-
 class BoundingBox {
 private:
 	float center[3];
 	float width, height, depth;
+	float minX, maxX, minY, maxY, minZ, maxZ;
 public:
 	BoundingBox();
 	BoundingBox(float *c, float w, float h, float d);

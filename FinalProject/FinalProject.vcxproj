@@ -69,6 +69,7 @@
     <ClCompile Include="BezierCurve.cpp" />
     <ClCompile Include="BezierPatch.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
+    <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Building.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CreateSkyscrapper.cpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="BezierCurve.h" />
     <ClInclude Include="BezierPatch.h" />
     <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CreateSkyscrapper.h" />

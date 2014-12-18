@@ -18,7 +18,7 @@
 
 using namespace std;
 
-const float DEG_TO_RADS = 3.141592654f / 180.0f; // convertion of 1 degree to radians
+const float DEG_TO_RADS = 3.141592654f / 180.0f; // conversion of 1 degree to radians
 
 /** Game name */
 char* title = "CSE167 - Final Project";
@@ -102,15 +102,7 @@ void makeNewCity(){
 
 /* Adjust camera position based off mouse and keyboard input */
 void calcCameraMovement() {
-	// check collisions
-	for (vector<Building*>::iterator it = makeGrid->getBuildings().begin(); it != makeGrid->getBuildings().end(); ++it) {
-		if (camera->getBoundingBox()->collidesWith((*it)->getBoundingBox())) {
-			Vector3 v(0.0, 0.0, -10.0);
-			camera->setCenterOfProjection(camera->getCenterOfProjection() - v);
-			printf("Collision\n");
-			return;
-		}
-	}
+	
 
 	float xMovement = 0.0f, yMovement = 0.0f, zMovement = 0.0f;
 
@@ -155,6 +147,50 @@ void calcCameraMovement() {
 	camYSpeed = yMovement;
 	camZSpeed = zMovement;
 
+	
+
+	// check collisions
+	for (vector<Building*>::iterator it = makeGrid->getBuildings().begin(); it != makeGrid->getBuildings().end(); ++it) {
+		int t = camera->getBoundingSphere()->collidesWith((*it)->getBoundingBox());
+		switch (t) {
+		case FRONT:
+			camZSpeed *= -1.0;
+			printf("Front");
+			break;
+		case BACK:
+			camZSpeed *= -1.0;
+			printf("Back");
+			break;
+		case LEFT:
+			camXSpeed *= -1.0;
+			printf("Left");
+			break;
+		case RIGHT:
+			camXSpeed *= -1.0;
+			printf("Right");
+			break;
+		case TOP:
+			camYSpeed *= -1.0;
+			printf("Top");
+			break;
+		case BOTTOM:
+			camYSpeed *= -1.0;
+			printf("Bottom");
+			break;
+		}
+		//if (camera->getBoundingSphere()->collidesWith((*it)->getBoundingBox())) {
+		//	GLfloat *temp = (*it)->getBoundingBox().getCenter();
+		//	Vector3 v(temp[0], temp[1], temp[2]);
+		//	v = camera->getCenterOfProjection() - v;
+		//	v.normalize();
+		//	//camera->setCenterOfProjection(camera->getCenterOfProjection() - v);
+		//	camXPos += v.x();
+		//	camYPos += v.y();
+		//	camZPos += v.z();
+		//	printf("Collision\n");
+		//	//return;
+		//}
+	}
 	// update camera position
 	camXPos += camXSpeed;
 	camYPos += camYSpeed;
@@ -165,6 +201,7 @@ void calcCameraMovement() {
 		camXPos + sin(camYAngle * DEG_TO_RADS), camYPos + -tan(camXAngle * DEG_TO_RADS), camZPos + -cos(camYAngle * DEG_TO_RADS),
 		0.0f, 1.0f, 0.0f);
 
+	
 	
 	// If camera moved, display new position
 	if (moveForward || moveBackward || moveLeft || moveRight) {
@@ -258,7 +295,7 @@ void displayCallback() {
 
 	//glPushMatrix();
 	//glLoadIdentity();
-	camera->getBoundingBox()->draw();
+	
 	//glPopMatrix();
 
 	emitter->update();
@@ -288,7 +325,7 @@ void displayCallback() {
 	glUniform3fvARB(skyShaderCameraPosition, 1, camera->getCenterOfProjection().asArray());
 	skybox->render();
 	skyShader->unbind();
-
+	
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_BLEND);
@@ -296,7 +333,7 @@ void displayCallback() {
 	// render lighting
 	pointLight0->enable();
 	pointLight0->draw();
-
+	
 	if (renderCity) {
 		textureShader->bind();
 		//GLuint location = glGetUniformLocation(textureShader->getPid(), "tex");
@@ -308,7 +345,7 @@ void displayCallback() {
 	/*if (renderCity){
 		makeGrid->render();
 	}*/
-
+	
 
 	//testParticles->ActivateParticles();
 	//testParticles->AdjustParticles();
@@ -323,8 +360,10 @@ void displayCallback() {
 	// render camera track
 	cameraTrack->render();
 
+	//camera->getBoundingSphere()->draw(camera->getCameraMatrix());
 	glFlush();
 	glutSwapBuffers();
+
 }
 
 /* OpenGL idle callback function */
@@ -455,7 +494,9 @@ int main(int argc, char *argv[]) {
 	glutSetCursor(GLUT_CURSOR_NONE); // hides cursor
 
 	// Initialize camera
-	camera = new Camera();
+	camera = new Camera(camXPos, camYPos, camZPos,
+		camXPos + sin(camYAngle * DEG_TO_RADS), camYPos + -tan(camXAngle * DEG_TO_RADS), camZPos + -cos(camYAngle * DEG_TO_RADS),
+		0.0f, 1.0f, 0.0f);
 
 	// Initialize skybox
 	skybox = new Cubemap("../res/textures/calm_right.raw",

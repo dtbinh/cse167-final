@@ -40,6 +40,8 @@ void Building::set(GLfloat px, GLfloat py, GLfloat pz, GLfloat w, GLfloat h, GLf
 	// set bounding box
 	if (bb) delete bb;
 	bb = new BoundingBox(px, py, pz, w, h, d);
+
+	printf("Pos: (%f, %f, %f), W: %f, H: %f, D: %f\n", px, py, pz, w, h, d);
 }
 
 void Building::render() {

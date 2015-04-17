@@ -15,4 +15,6 @@ Controls:
 * t - creates a new procedurally generated city
 * ESC - End program
 
-NOTE: At this point, the program controls and hides the cursor. Therefore, it cannot be exited using the mouse. Use ESC instead.
+NOTE: The program controls and hides the cursor. Therefore, it cannot be exited using the mouse. Use ESC instead.
+
+More detailed write-up and video available [here](https://cse167finalprojectcareybishop.wordpress.com/) (program runs much more smoothly than the video).

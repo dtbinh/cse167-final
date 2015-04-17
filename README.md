@@ -1,7 +1,7 @@
 cse167-final
 ============
 
-Final project for CSE167
+Final project for CSE167: Introduction to Computer Graphics
 
 Authors: Jesse Bishop and Evan Carey
 
@@ -17,4 +17,6 @@ Controls:
 
 NOTE: The program controls and hides the cursor. Therefore, it cannot be exited using the mouse. Use ESC instead.
 
-More detailed write-up and video available [here](https://cse167finalprojectcareybishop.wordpress.com/) (program runs much more smoothly than the video).
+-----------
+
+More detailed write-up and video available [here](https://cse167finalprojectcareybishop.wordpress.com/) (actual program runs much more smoothly than the video).
